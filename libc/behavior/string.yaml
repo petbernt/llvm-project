@@ -190,3 +190,18 @@ functions:
         text: "Stops at the first null terminator in src even if later bytes match segment."
       - id: "string.strcspn.B3"
         text: "Returns the length of src when no byte from segment occurs before the terminating null byte."
+
+  strspn:
+    signature: "size_t(const char *src, const char *segment)"
+    status: experimental
+    preconditions:
+      - "src and segment point to null-terminated byte strings."
+    behaviors:
+      - id: "string.strspn.B1"
+        text: "Returns the length of the maximal prefix of src containing only bytes from segment."
+      - id: "string.strspn.B2"
+        text: "Stops at the first null terminator in src even if later bytes are in segment."
+      - id: "string.strspn.B3"
+        text: "Returns 0 when the first byte of src is not in segment or src is empty."
+      - id: "string.strspn.B4"
+        text: "When LIBC_ADD_NULL_CHECKS is enabled, strspn(nullptr, nullptr) terminates via the configured null-pointer checks."

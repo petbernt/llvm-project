@@ -11,6 +11,7 @@
 
 #include "test/UnitTest/Test.h"
 
+// @verifies string.strspn.B3
 TEST(LlvmLibcStrSpnTest, EmptyStringShouldReturnZeroLengthSpan) {
   // The search should not include the null terminator.
   EXPECT_EQ(LIBC_NAMESPACE::strspn("", ""), size_t{0});
@@ -18,6 +19,7 @@ TEST(LlvmLibcStrSpnTest, EmptyStringShouldReturnZeroLengthSpan) {
   EXPECT_EQ(LIBC_NAMESPACE::strspn("", "_"), size_t{0});
 }
 
+// @verifies string.strspn.B2
 TEST(LlvmLibcStrSpnTest, ShouldNotSpanAnythingAfterNullTerminator) {
   const char src[4] = {'a', 'b', '\0', 'c'};
   EXPECT_EQ(LIBC_NAMESPACE::strspn(src, "ab"), size_t{2});
@@ -45,6 +47,7 @@ TEST(LlvmLibcStrSpnTest, UnmatchedCharacterShouldNotBeCountedInSpan) {
   EXPECT_EQ(LIBC_NAMESPACE::strspn("123", "4"), size_t{0});
 }
 
+// @verifies string.strspn.B1
 TEST(LlvmLibcStrSpnTest, SequentialCharactersShouldSpan) {
   const char *src = "abcde";
   EXPECT_EQ(LIBC_NAMESPACE::strspn(src, "a"), size_t{1});
@@ -91,6 +94,7 @@ TEST(LlvmLibcStrSpnTest, TopBitSet) {
 
 #if defined(LIBC_ADD_NULL_CHECKS)
 
+// @verifies string.strspn.B4
 TEST(LlvmLibcStrSpnTest, CrashOnNullPtr) {
   ASSERT_DEATH([]() { LIBC_NAMESPACE::strspn(nullptr, nullptr); },
                WITH_SIGNAL(-1));
