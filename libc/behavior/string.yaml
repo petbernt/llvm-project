@@ -40,3 +40,20 @@ functions:
         text: "Does not write outside dest..dest+count."
       - id: "string.memset.B6"
         text: "When LIBC_ADD_NULL_CHECKS is enabled, memset(nullptr, 0, 1) terminates via the configured null-pointer checks."
+
+  memcmp:
+    signature: "int(const void *lhs, const void *rhs, size_t count)"
+    status: experimental
+    preconditions:
+      - "lhs and rhs are valid memory regions of at least count bytes."
+    behaviors:
+      - id: "string.memcmp.B1"
+        text: "If count == 0, returns 0."
+      - id: "string.memcmp.B2"
+        text: "Returns 0 when the first count bytes of lhs and rhs compare equal."
+      - id: "string.memcmp.B3"
+        text: "Returns a value less than 0 when the first differing byte in lhs is less than the corresponding byte in rhs."
+      - id: "string.memcmp.B4"
+        text: "Returns a value greater than 0 when the first differing byte in lhs is greater than the corresponding byte in rhs."
+      - id: "string.memcmp.B5"
+        text: "When LIBC_ADD_NULL_CHECKS is enabled, memcmp(nullptr, nullptr, 1) terminates via the configured null-pointer checks."

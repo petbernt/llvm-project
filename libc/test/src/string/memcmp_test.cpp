@@ -15,24 +15,28 @@
 
 namespace LIBC_NAMESPACE_DECL {
 
+// @verifies string.memcmp.B1
 TEST(LlvmLibcMemcmpTest, CmpZeroByte) {
   const char *lhs = "ab";
   const char *rhs = "yz";
   EXPECT_EQ(LIBC_NAMESPACE::memcmp(lhs, rhs, 0), 0);
 }
 
+// @verifies string.memcmp.B2
 TEST(LlvmLibcMemcmpTest, LhsRhsAreTheSame) {
   const char *lhs = "ab";
   const char *rhs = "ab";
   EXPECT_EQ(LIBC_NAMESPACE::memcmp(lhs, rhs, 2), 0);
 }
 
+// @verifies string.memcmp.B3
 TEST(LlvmLibcMemcmpTest, LhsBeforeRhsLexically) {
   const char *lhs = "ab";
   const char *rhs = "az";
   EXPECT_LT(LIBC_NAMESPACE::memcmp(lhs, rhs, 2), 0);
 }
 
+// @verifies string.memcmp.B4
 TEST(LlvmLibcMemcmpTest, LhsAfterRhsLexically) {
   const char *lhs = "az";
   const char *rhs = "ab";
@@ -68,6 +72,7 @@ TEST(LlvmLibcMemcmpTest, SizeSweep) {
 
 #if defined(LIBC_ADD_NULL_CHECKS)
 
+// @verifies string.memcmp.B5
 TEST(LlvmLibcMemcmpTest, CrashOnNullPtr) {
   ASSERT_DEATH([]() { LIBC_NAMESPACE::memcmp(nullptr, nullptr, 1); },
                WITH_SIGNAL(-1));
