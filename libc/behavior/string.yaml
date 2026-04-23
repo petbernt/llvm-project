@@ -205,3 +205,16 @@ functions:
         text: "Returns 0 when the first byte of src is not in segment or src is empty."
       - id: "string.strspn.B4"
         text: "When LIBC_ADD_NULL_CHECKS is enabled, strspn(nullptr, nullptr) terminates via the configured null-pointer checks."
+
+  strnlen_s:
+    signature: "size_t(const char *src, size_t count)"
+    status: experimental
+    preconditions:
+      - "If src is not null, it points to a byte string that is readable for at least count bytes or until an earlier null terminator."
+    behaviors:
+      - id: "string.strnlen_s.B1"
+        text: "Returns 0 when src is nullptr."
+      - id: "string.strnlen_s.B2"
+        text: "Returns the number of bytes before the first null terminator when that terminator appears within the first count bytes."
+      - id: "string.strnlen_s.B3"
+        text: "Returns count when no null terminator appears within the first count bytes."

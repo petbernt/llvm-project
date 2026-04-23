@@ -10,6 +10,7 @@
 #include "test/UnitTest/Test.h"
 #include <stddef.h>
 
+// @verifies string.strnlen_s.B1
 TEST(LlvmLibcStrNLenSTest, NullPointerInput) {
   const char *str = nullptr;
   // If the string input is a null pointer, it should return 0 regardless of
@@ -21,6 +22,7 @@ TEST(LlvmLibcStrNLenSTest, NullPointerInput) {
 // The semantics when the string input is not null are the same as strnlen. The
 // following tests are copied from the latter's tests.
 
+// @verifies string.strnlen_s.B2
 TEST(LlvmLibcStrNLenSTest, EmptyString) {
   const char *empty = "";
   ASSERT_EQ(static_cast<size_t>(0), LIBC_NAMESPACE::strnlen_s(empty, 0));
@@ -28,6 +30,7 @@ TEST(LlvmLibcStrNLenSTest, EmptyString) {
   ASSERT_EQ(static_cast<size_t>(0), LIBC_NAMESPACE::strnlen_s(empty, 1));
 }
 
+// @verifies string.strnlen_s.B2
 TEST(LlvmLibcStrNLenSTest, OneCharacterString) {
   const char *single = "X";
   ASSERT_EQ(static_cast<size_t>(1), LIBC_NAMESPACE::strnlen_s(single, 1));
@@ -37,6 +40,7 @@ TEST(LlvmLibcStrNLenSTest, OneCharacterString) {
   ASSERT_EQ(static_cast<size_t>(1), LIBC_NAMESPACE::strnlen_s(single, 2));
 }
 
+// @verifies string.strnlen_s.B3
 TEST(LlvmLibcStrNLenSTest, ManyCharacterString) {
   const char *many = "123456789";
   ASSERT_EQ(static_cast<size_t>(9), LIBC_NAMESPACE::strnlen_s(many, 9));
@@ -48,6 +52,7 @@ TEST(LlvmLibcStrNLenSTest, ManyCharacterString) {
   ASSERT_EQ(static_cast<size_t>(9), LIBC_NAMESPACE::strnlen_s(many, 42));
 }
 
+// @verifies string.strnlen_s.B2
 TEST(LlvmLibcStrNLenSTest, CharactersAfterNullTerminatorShouldNotBeIncluded) {
   const char str[5] = {'a', 'b', 'c', '\0', 'd'};
   ASSERT_EQ(static_cast<size_t>(3), LIBC_NAMESPACE::strnlen_s(str, 3));
