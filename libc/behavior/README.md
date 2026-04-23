@@ -14,6 +14,9 @@ The current experiment is intentionally narrow:
   `// @verifies <BEHAVIOR_ID>` comments placed directly above the matching test
 - `libc/utils/behavior_mapping_check.py` validates that the metadata and
   annotations are internally consistent
+- the current scope focuses on simple string and memory primitives that are
+  common in low-level code, currently `memcpy`, `memset`, `memcmp`, `memchr`,
+  `strlen`, `memrchr`, `strcmp`, `strncmp`, and `strnlen`
 
 This is source-level mapping only. It does not claim that mapped tests were
 built, executed, or passed in a particular run.

@@ -6,8 +6,8 @@ functions:
     signature: "void *(void *dest, const void *src, size_t count)"
     status: experimental
     preconditions:
-      - "dest and src are valid memory regions of at least count bytes."
-      - "src and dest ranges do not overlap."
+      - "If count > 0, dest and src point to valid memory regions of at least count bytes."
+      - "If count > 0, the source and destination ranges do not overlap."
     behaviors:
       - id: "string.memcpy.B1"
         text: "Returns dest."
@@ -26,7 +26,7 @@ functions:
     signature: "void *(void *dest, int value, size_t count)"
     status: experimental
     preconditions:
-      - "dest is a valid memory region of at least count bytes."
+      - "If count > 0, dest points to a valid memory region of at least count bytes."
     behaviors:
       - id: "string.memset.B1"
         text: "Returns dest."
@@ -45,7 +45,7 @@ functions:
     signature: "int(const void *lhs, const void *rhs, size_t count)"
     status: experimental
     preconditions:
-      - "lhs and rhs are valid memory regions of at least count bytes."
+      - "If count > 0, lhs and rhs point to valid memory regions of at least count bytes."
     behaviors:
       - id: "string.memcmp.B1"
         text: "If count == 0, returns 0."
@@ -62,7 +62,7 @@ functions:
     signature: "void *(const void *src, int value, size_t count)"
     status: experimental
     preconditions:
-      - "src is a valid memory region of at least count bytes."
+      - "If count > 0, src points to a valid memory region of at least count bytes."
     behaviors:
       - id: "string.memchr.B1"
         text: "Returns a pointer to the first byte equal to (unsigned char)value within the first count bytes of src."
@@ -92,7 +92,7 @@ functions:
     signature: "void *(const void *src, int value, size_t count)"
     status: experimental
     preconditions:
-      - "src is a valid memory region of at least count bytes."
+      - "If count > 0, src points to a valid memory region of at least count bytes."
     behaviors:
       - id: "string.memrchr.B1"
         text: "Returns a pointer to the last byte equal to (unsigned char)value within the first count bytes of src."
@@ -124,7 +124,7 @@ functions:
     signature: "int(const char *lhs, const char *rhs, size_t count)"
     status: experimental
     preconditions:
-      - "lhs and rhs point to byte strings that are readable up to the first null terminator or count bytes, whichever comes first."
+      - "If count > 0, lhs and rhs point to byte strings that are readable for count bytes or until an earlier null terminator."
     behaviors:
       - id: "string.strncmp.B1"
         text: "If count == 0, returns 0."
@@ -143,7 +143,7 @@ functions:
     signature: "size_t(const char *src, size_t count)"
     status: experimental
     preconditions:
-      - "src points to a byte string that is readable for at least count bytes or until an earlier null terminator."
+      - "src points to a byte string that is readable for count bytes or until an earlier null terminator."
     behaviors:
       - id: "string.strnlen.B1"
         text: "Returns 0 for an empty string."
@@ -210,7 +210,7 @@ functions:
     signature: "size_t(const char *src, size_t count)"
     status: experimental
     preconditions:
-      - "If src is not null, it points to a byte string that is readable for at least count bytes or until an earlier null terminator."
+      - "If src is not null, it points to a byte string that is readable for count bytes or until an earlier null terminator."
     behaviors:
       - id: "string.strnlen_s.B1"
         text: "Returns 0 when src is nullptr."
