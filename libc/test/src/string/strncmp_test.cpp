@@ -7,11 +7,13 @@
 //===----------------------------------------------------------------------===//
 
 #include "src/string/strncmp.h"
+#include "hdr/signal_macros.h"
 #include "test/UnitTest/Test.h"
 
 // This group is just copies of the strcmp tests, since all the same cases still
 // need to be tested.
 
+// @verifies string.strncmp.B2
 TEST(LlvmLibcStrNCmpTest, EmptyStringsShouldReturnZeroWithSufficientLength) {
   const char *s1 = "";
   const char *s2 = "";
@@ -23,6 +25,7 @@ TEST(LlvmLibcStrNCmpTest, EmptyStringsShouldReturnZeroWithSufficientLength) {
   ASSERT_EQ(result, 0);
 }
 
+// @verifies string.strncmp.B3
 TEST(LlvmLibcStrNCmpTest,
      EmptyStringShouldNotEqualNonEmptyStringWithSufficientLength) {
   const char *empty = "";
@@ -38,6 +41,7 @@ TEST(LlvmLibcStrNCmpTest,
   ASSERT_EQ(result, 49);
 }
 
+// @verifies string.strncmp.B2
 TEST(LlvmLibcStrNCmpTest, EqualStringsShouldReturnZeroWithSufficientLength) {
   const char *s1 = "abc";
   const char *s2 = "abc";
@@ -49,6 +53,7 @@ TEST(LlvmLibcStrNCmpTest, EqualStringsShouldReturnZeroWithSufficientLength) {
   ASSERT_EQ(result, 0);
 }
 
+// @verifies string.strncmp.B3
 TEST(LlvmLibcStrNCmpTest,
      ShouldReturnResultOfFirstDifferenceWithSufficientLength) {
   const char *s1 = "___B42__";
@@ -63,6 +68,7 @@ TEST(LlvmLibcStrNCmpTest,
   ASSERT_EQ(result, 1);
 }
 
+// @verifies string.strncmp.B4
 TEST(LlvmLibcStrNCmpTest,
      CapitalizedLetterShouldNotBeEqualWithSufficientLength) {
   const char *s1 = "abcd";
@@ -77,6 +83,7 @@ TEST(LlvmLibcStrNCmpTest,
   ASSERT_EQ(result, -32);
 }
 
+// @verifies string.strncmp.B3
 TEST(LlvmLibcStrNCmpTest,
      UnequalLengthStringsShouldNotReturnZeroWithSufficientLength) {
   const char *s1 = "abc";
@@ -91,6 +98,7 @@ TEST(LlvmLibcStrNCmpTest,
   ASSERT_EQ(result, 100);
 }
 
+// @verifies string.strncmp.B4
 TEST(LlvmLibcStrNCmpTest, StringArgumentSwapChangesSignWithSufficientLength) {
   const char *a = "a";
   const char *b = "b";
@@ -105,6 +113,7 @@ TEST(LlvmLibcStrNCmpTest, StringArgumentSwapChangesSignWithSufficientLength) {
 
 // This group is actually testing strncmp functionality
 
+// @verifies string.strncmp.B1
 TEST(LlvmLibcStrNCmpTest, NonEqualStringsEqualWithLengthZero) {
   const char *s1 = "abc";
   const char *s2 = "def";
@@ -116,6 +125,7 @@ TEST(LlvmLibcStrNCmpTest, NonEqualStringsEqualWithLengthZero) {
   ASSERT_EQ(result, 0);
 }
 
+// @verifies string.strncmp.B3
 TEST(LlvmLibcStrNCmpTest, NonEqualStringsNotEqualWithLengthOne) {
   const char *s1 = "abc";
   const char *s2 = "def";
@@ -127,6 +137,7 @@ TEST(LlvmLibcStrNCmpTest, NonEqualStringsNotEqualWithLengthOne) {
   ASSERT_EQ(result, 3);
 }
 
+// @verifies string.strncmp.B2
 TEST(LlvmLibcStrNCmpTest, NonEqualStringsEqualWithShorterLength) {
   const char *s1 = "___B42__";
   const char *s2 = "___C55__";
@@ -146,6 +157,7 @@ TEST(LlvmLibcStrNCmpTest, NonEqualStringsEqualWithShorterLength) {
   ASSERT_EQ(result, 1);
 }
 
+// @verifies string.strncmp.B5
 TEST(LlvmLibcStrNCmpTest, StringComparisonEndsOnNullByteEvenWithLongerLength) {
   const char *s1 = "abc\0def";
   const char *s2 = "abc\0abc";
@@ -168,9 +180,20 @@ TEST(LlvmLibcStrNCmpTest, Case) {
   ASSERT_GT(result, 0);
 }
 
+// @verifies string.strncmp.B4
 TEST(LlvmLibcStrNCmpTest, CharactersGreaterThan127ShouldBePositive) {
   const char s1[] = {static_cast<char>(128), '\0'};
   const char s2[] = {'\0'};
   int result = LIBC_NAMESPACE::strncmp(s1, s2, 1);
   ASSERT_GT(result, 0);
 }
+
+#if defined(LIBC_ADD_NULL_CHECKS)
+
+// @verifies string.strncmp.B6
+TEST(LlvmLibcStrNCmpTest, CrashOnNullPtr) {
+  ASSERT_DEATH([]() { LIBC_NAMESPACE::strncmp(nullptr, nullptr, 1); },
+               WITH_SIGNAL(-1));
+}
+
+#endif // defined(LIBC_ADD_NULL_CHECKS)

@@ -119,3 +119,22 @@ functions:
         text: "Returns a value greater than 0 when the first differing byte in lhs is greater than the corresponding byte in rhs, treating bytes as unsigned char."
       - id: "string.strcmp.B4"
         text: "Stops comparison at the first null terminator."
+
+  strncmp:
+    signature: "int(const char *lhs, const char *rhs, size_t count)"
+    status: experimental
+    preconditions:
+      - "lhs and rhs point to byte strings that are readable up to the first null terminator or count bytes, whichever comes first."
+    behaviors:
+      - id: "string.strncmp.B1"
+        text: "If count == 0, returns 0."
+      - id: "string.strncmp.B2"
+        text: "Returns 0 when lhs and rhs compare equal over the first count bytes or until an earlier null terminator."
+      - id: "string.strncmp.B3"
+        text: "Returns a value less than 0 when the first differing byte in lhs is less than the corresponding byte in rhs within the compared range, treating bytes as unsigned char."
+      - id: "string.strncmp.B4"
+        text: "Returns a value greater than 0 when the first differing byte in lhs is greater than the corresponding byte in rhs within the compared range, treating bytes as unsigned char."
+      - id: "string.strncmp.B5"
+        text: "Stops comparison at the first null terminator even if count is larger."
+      - id: "string.strncmp.B6"
+        text: "When LIBC_ADD_NULL_CHECKS is enabled, strncmp(nullptr, nullptr, 1) terminates via the configured null-pointer checks."
