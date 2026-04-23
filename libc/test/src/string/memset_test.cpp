@@ -24,18 +24,35 @@ static inline void Adaptor(cpp::span<char> p1, uint8_t value, size_t size) {
   LIBC_NAMESPACE::memset(p1.begin(), value, size);
 }
 
+// @verifies string.memset.B1
+// @verifies string.memset.B2
+// @verifies string.memset.B3
 TEST(LlvmLibcMemsetTest, SizeSweep) {
   static constexpr size_t kMaxSize = 400;
   Buffer DstBuffer(kMaxSize);
   for (size_t size = 0; size < kMaxSize; ++size) {
     const uint8_t value = size % 10;
     auto dst = DstBuffer.span().subspan(0, size);
-    ASSERT_TRUE((CheckMemset<Adaptor>(dst, value, size)));
+    Randomize(dst);
+    void *ret = LIBC_NAMESPACE::memset(dst.begin(), value, size);
+    ASSERT_EQ(ret, static_cast<void *>(dst.begin()));
+    for (char c : dst)
+      ASSERT_EQ(c, static_cast<char>(value));
   }
 }
 
 #if !defined(LIBC_FULL_BUILD) && defined(LIBC_TARGET_OS_IS_LINUX)
 
+// @verifies string.memset.B4
+TEST(LlvmLibcMemsetTest, ZeroCountDoesNotAccessMemory) {
+  ProtectedPages pages;
+  const Page no_access_dst = pages.GetPageA(); // PROT_NONE by default.
+  void *dst = no_access_dst.top(0);
+  void *ret = LIBC_NAMESPACE::memset(dst, 0x7F, 0);
+  ASSERT_EQ(ret, dst);
+}
+
+// @verifies string.memset.B5
 TEST(LlvmLibcMemsetTest, CheckAccess) {
   static constexpr size_t MAX_SIZE = 1024;
   LIBC_ASSERT(MAX_SIZE < GetPageSize());
@@ -62,6 +79,7 @@ TEST(LlvmLibcMemsetTest, CheckAccess) {
 
 #if defined(LIBC_ADD_NULL_CHECKS)
 
+// @verifies string.memset.B6
 TEST(LlvmLibcMemsetTest, CrashOnNullPtr) {
   ASSERT_DEATH([]() { LIBC_NAMESPACE::memset(nullptr, 0, 1); },
                WITH_SIGNAL(-1));

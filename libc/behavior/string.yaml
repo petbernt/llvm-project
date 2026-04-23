@@ -1,0 +1,38 @@
+header: string.h
+component: llvm-libc
+
+functions:
+  memcpy:
+    signature: "void *(void *dest, const void *src, size_t count)"
+    status: experimental
+    preconditions:
+      - "dest and src are valid memory regions of at least count bytes."
+      - "src and dest ranges do not overlap."
+    behaviors:
+      - id: "string.memcpy.B1"
+        text: "Returns dest."
+      - id: "string.memcpy.B2"
+        text: "If count > 0, writes exactly count bytes to dest."
+      - id: "string.memcpy.B3"
+        text: "For all i in [0, count), the byte at ((unsigned char *)dest)[i] after the call equals the byte at ((const unsigned char *)src)[i] before the call."
+      - id: "string.memcpy.B4"
+        text: "If count == 0, performs no reads from src and no writes to dest."
+      - id: "string.memcpy.B5"
+        text: "Does not write outside dest..dest+count."
+
+  memset:
+    signature: "void *(void *dest, int value, size_t count)"
+    status: experimental
+    preconditions:
+      - "dest is a valid memory region of at least count bytes."
+    behaviors:
+      - id: "string.memset.B1"
+        text: "Returns dest."
+      - id: "string.memset.B2"
+        text: "If count > 0, writes exactly count bytes to dest."
+      - id: "string.memset.B3"
+        text: "For all i in [0, count), the byte at ((unsigned char *)dest)[i] after the call equals (unsigned char)value."
+      - id: "string.memset.B4"
+        text: "If count == 0, performs no writes to dest."
+      - id: "string.memset.B5"
+        text: "Does not write outside dest..dest+count."

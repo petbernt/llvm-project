@@ -25,6 +25,9 @@ static inline void Adaptor(cpp::span<char> dst, cpp::span<char> src,
   LIBC_NAMESPACE::memcpy(dst.begin(), src.begin(), size);
 }
 
+// @verifies string.memcpy.B1
+// @verifies string.memcpy.B2
+// @verifies string.memcpy.B3
 TEST(LlvmLibcMemcpyTest, SizeSweep) {
   static constexpr size_t kMaxSize = 400;
   Buffer SrcBuffer(kMaxSize);
@@ -33,12 +36,27 @@ TEST(LlvmLibcMemcpyTest, SizeSweep) {
   for (size_t size = 0; size < kMaxSize; ++size) {
     auto src = SrcBuffer.span().subspan(0, size);
     auto dst = DstBuffer.span().subspan(0, size);
-    ASSERT_TRUE(CheckMemcpy<Adaptor>(dst, src, size));
+    Randomize(dst);
+    void *ret = LIBC_NAMESPACE::memcpy(dst.begin(), src.begin(), size);
+    ASSERT_EQ(ret, static_cast<void *>(dst.begin()));
+    ASSERT_TRUE(IsEqual(dst, src));
   }
 }
 
 #if !defined(LIBC_FULL_BUILD) && defined(LIBC_TARGET_OS_IS_LINUX)
 
+// @verifies string.memcpy.B4
+TEST(LlvmLibcMemcpyTest, ZeroCountDoesNotAccessMemory) {
+  ProtectedPages pages;
+  const Page no_access_dst = pages.GetPageA(); // PROT_NONE by default.
+  const Page no_access_src = pages.GetPageB(); // PROT_NONE by default.
+  void *dst = no_access_dst.top(0);
+  const void *src = no_access_src.top(0);
+  void *ret = LIBC_NAMESPACE::memcpy(dst, src, 0);
+  ASSERT_EQ(ret, dst);
+}
+
+// @verifies string.memcpy.B5
 TEST(LlvmLibcMemcpyTest, CheckAccess) {
   static constexpr size_t MAX_SIZE = 1024;
   LIBC_ASSERT(MAX_SIZE < GetPageSize());
@@ -75,6 +93,7 @@ TEST(LlvmLibcMemcpyTest, CheckAccess) {
 
 #if defined(LIBC_ADD_NULL_CHECKS)
 
+// @verifies string.memcpy.B6
 TEST(LlvmLibcMemcpyTest, CrashOnNullPtr) {
   ASSERT_DEATH([]() { LIBC_NAMESPACE::memcpy(nullptr, nullptr, 1); },
                WITH_SIGNAL(-1));
