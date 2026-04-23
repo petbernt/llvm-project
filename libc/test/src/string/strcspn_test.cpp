@@ -10,6 +10,7 @@
 
 #include "test/UnitTest/Test.h"
 
+// @verifies string.strcspn.B2
 TEST(LlvmLibcStrCSpnTest, ComplementarySpanShouldNotGoPastNullTerminator) {
   const char src[5] = {'a', 'b', '\0', 'c', 'd'};
   EXPECT_EQ(LIBC_NAMESPACE::strcspn(src, "b"), size_t{1});
@@ -20,6 +21,7 @@ TEST(LlvmLibcStrCSpnTest, ComplementarySpanShouldNotGoPastNullTerminator) {
   EXPECT_EQ(LIBC_NAMESPACE::strcspn("123", segment), size_t{0});
 }
 
+// @verifies string.strcspn.B1
 TEST(LlvmLibcStrCSpnTest, ComplementarySpanForEachIndividualCharacter) {
   const char *src = "12345";
   // The complementary span size should increment accordingly.
@@ -30,6 +32,7 @@ TEST(LlvmLibcStrCSpnTest, ComplementarySpanForEachIndividualCharacter) {
   EXPECT_EQ(LIBC_NAMESPACE::strcspn(src, "5"), size_t{4});
 }
 
+// @verifies string.strcspn.B3
 TEST(LlvmLibcStrCSpnTest, ComplementarySpanIsStringLengthIfNoCharacterFound) {
   // Null terminator.
   EXPECT_EQ(LIBC_NAMESPACE::strcspn("", ""), size_t{0});

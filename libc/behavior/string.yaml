@@ -177,3 +177,16 @@ functions:
         text: "Returns a pointer to the terminating null byte when value is '\\0'."
       - id: "string.strrchr.B3"
         text: "Returns nullptr when (char)value does not occur in src before the terminating null byte."
+
+  strcspn:
+    signature: "size_t(const char *src, const char *segment)"
+    status: experimental
+    preconditions:
+      - "src and segment point to null-terminated byte strings."
+    behaviors:
+      - id: "string.strcspn.B1"
+        text: "Returns the length of the maximal prefix of src containing no byte from segment."
+      - id: "string.strcspn.B2"
+        text: "Stops at the first null terminator in src even if later bytes match segment."
+      - id: "string.strcspn.B3"
+        text: "Returns the length of src when no byte from segment occurs before the terminating null byte."
