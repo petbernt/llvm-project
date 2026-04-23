@@ -164,3 +164,16 @@ functions:
         text: "Returns a pointer to the terminating null byte when value is '\\0'."
       - id: "string.strchr.B3"
         text: "Returns nullptr when (char)value does not occur in src before the terminating null byte."
+
+  strrchr:
+    signature: "char *(const char *src, int value)"
+    status: experimental
+    preconditions:
+      - "src points to a null-terminated byte string."
+    behaviors:
+      - id: "string.strrchr.B1"
+        text: "Returns a pointer to the last occurrence of (char)value in src."
+      - id: "string.strrchr.B2"
+        text: "Returns a pointer to the terminating null byte when value is '\\0'."
+      - id: "string.strrchr.B3"
+        text: "Returns nullptr when (char)value does not occur in src before the terminating null byte."
