@@ -14,8 +14,18 @@ if(LLVM_LIBC_INCLUDE_BEHAVIOR_MAPPING)
             ${CMAKE_CURRENT_SOURCE_DIR}/..
   )
 
+  add_test(
+    NAME libc_behavior_mapping_report_unit_test
+    COMMAND python3 ${CMAKE_CURRENT_SOURCE_DIR}/behavior_mapping_report_test.py
+  )
+
   add_custom_target(check-libc-behavior-mapping
     COMMAND ${CMAKE_CTEST_COMMAND} -R libc_behavior_mapping_ --output-on-failure
+  )
+
+  add_custom_target(report-libc-behavior-mapping
+    COMMAND python3 ${CMAKE_CURRENT_SOURCE_DIR}/behavior_mapping_report.py --libc-dir
+            ${CMAKE_CURRENT_SOURCE_DIR}/.. --build-dir ${CMAKE_BINARY_DIR}
   )
 
   message(STATUS "Behavior mapping checks added.")
