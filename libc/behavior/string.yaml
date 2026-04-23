@@ -72,3 +72,18 @@ functions:
         text: "Searches the full count-byte range and does not stop at a null byte."
       - id: "string.memchr.B4"
         text: "When LIBC_ADD_NULL_CHECKS is enabled, memchr(nullptr, 1, 1) terminates via the configured null-pointer checks."
+
+  strlen:
+    signature: "size_t(const char *src)"
+    status: experimental
+    preconditions:
+      - "src points to a null-terminated byte string."
+    behaviors:
+      - id: "string.strlen.B1"
+        text: "Returns 0 for an empty string."
+      - id: "string.strlen.B2"
+        text: "Returns the number of bytes before the first null terminator."
+      - id: "string.strlen.B3"
+        text: "Stops at the first null terminator even if later bytes are non-zero."
+      - id: "string.strlen.B4"
+        text: "When LIBC_ADD_NULL_CHECKS is enabled, strlen(nullptr) terminates via the configured null-pointer checks."
