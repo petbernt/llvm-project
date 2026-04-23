@@ -3,6 +3,11 @@
 This directory contains small, non-normative behavior descriptions for selected
 llvm-libc functions.
 
+For a branch-local workflow describing how to use this PoC to build
+qualification-style evidence for one function at a time, see:
+
+`libc/behavior/methodology.md`
+
 The immediate goal is to make it easier to answer questions such as:
 - where is a specific libc behavior tested?
 - which documented behaviors currently have no mapped test?
