@@ -57,3 +57,18 @@ functions:
         text: "Returns a value greater than 0 when the first differing byte in lhs is greater than the corresponding byte in rhs."
       - id: "string.memcmp.B5"
         text: "When LIBC_ADD_NULL_CHECKS is enabled, memcmp(nullptr, nullptr, 1) terminates via the configured null-pointer checks."
+
+  memchr:
+    signature: "void *(const void *src, int value, size_t count)"
+    status: experimental
+    preconditions:
+      - "src is a valid memory region of at least count bytes."
+    behaviors:
+      - id: "string.memchr.B1"
+        text: "Returns a pointer to the first byte equal to (unsigned char)value within the first count bytes of src."
+      - id: "string.memchr.B2"
+        text: "Returns nullptr when no byte equal to (unsigned char)value appears within the first count bytes of src."
+      - id: "string.memchr.B3"
+        text: "Searches the full count-byte range and does not stop at a null byte."
+      - id: "string.memchr.B4"
+        text: "When LIBC_ADD_NULL_CHECKS is enabled, memchr(nullptr, 1, 1) terminates via the configured null-pointer checks."

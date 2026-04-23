@@ -26,6 +26,7 @@ TEST(LlvmLibcMemChrTest, WideReadMultiIteration) {
   ASSERT_STREQ(call_memchr(src, '$', 22), "$\n");
 }
 
+// @verifies string.memchr.B3
 TEST(LlvmLibcMemChrTest, FindsCharacterAfterNullTerminator) {
   // memchr should continue searching after a null terminator.
   const size_t size = 5;
@@ -43,6 +44,7 @@ TEST(LlvmLibcMemChrTest, FindsCharacterInNonNullTerminatedCollection) {
   ASSERT_EQ(ret[1], 'c');
 }
 
+// @verifies string.memchr.B1
 TEST(LlvmLibcMemChrTest, FindsFirstCharacter) {
   const size_t size = 6;
   const unsigned char src[size] = {'a', 'b', 'c', 'd', 'e', '\0'};
@@ -71,6 +73,7 @@ TEST(LlvmLibcMemChrTest, FindsNullTerminator) {
   ASSERT_STREQ(call_memchr(src, '\0', size), "");
 }
 
+// @verifies string.memchr.B2
 TEST(LlvmLibcMemChrTest, CharacterNotWithinStringShouldReturnNullptr) {
   const size_t size = 4;
   const unsigned char src[size] = {'1', '2', '3', '?'};
@@ -133,6 +136,7 @@ TEST(LlvmLibcMemChrTest, SignedCharacterFound) {
 
 #if defined(LIBC_ADD_NULL_CHECKS)
 
+// @verifies string.memchr.B4
 TEST(LlvmLibcMemChrTest, CrashOnNullPtr) {
   ASSERT_DEATH([]() { LIBC_NAMESPACE::memchr(nullptr, 1, 1); },
                WITH_SIGNAL(-1));
