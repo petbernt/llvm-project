@@ -87,3 +87,20 @@ functions:
         text: "Stops at the first null terminator even if later bytes are non-zero."
       - id: "string.strlen.B4"
         text: "When LIBC_ADD_NULL_CHECKS is enabled, strlen(nullptr) terminates via the configured null-pointer checks."
+
+  memrchr:
+    signature: "void *(const void *src, int value, size_t count)"
+    status: experimental
+    preconditions:
+      - "src is a valid memory region of at least count bytes."
+    behaviors:
+      - id: "string.memrchr.B1"
+        text: "Returns a pointer to the last byte equal to (unsigned char)value within the first count bytes of src."
+      - id: "string.memrchr.B2"
+        text: "Returns nullptr when no byte equal to (unsigned char)value appears within the first count bytes of src."
+      - id: "string.memrchr.B3"
+        text: "Searches the full count-byte range and does not stop at a null byte."
+      - id: "string.memrchr.B4"
+        text: "If count == 0, returns nullptr."
+      - id: "string.memrchr.B5"
+        text: "When LIBC_ADD_NULL_CHECKS is enabled, memrchr(nullptr, 'd', 1) terminates via the configured null-pointer checks."
