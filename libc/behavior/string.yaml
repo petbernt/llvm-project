@@ -104,3 +104,18 @@ functions:
         text: "If count == 0, returns nullptr."
       - id: "string.memrchr.B5"
         text: "When LIBC_ADD_NULL_CHECKS is enabled, memrchr(nullptr, 'd', 1) terminates via the configured null-pointer checks."
+
+  strcmp:
+    signature: "int(const char *lhs, const char *rhs)"
+    status: experimental
+    preconditions:
+      - "lhs and rhs point to null-terminated byte strings."
+    behaviors:
+      - id: "string.strcmp.B1"
+        text: "Returns 0 when lhs and rhs compare equal."
+      - id: "string.strcmp.B2"
+        text: "Returns a value less than 0 when the first differing byte in lhs is less than the corresponding byte in rhs, treating bytes as unsigned char."
+      - id: "string.strcmp.B3"
+        text: "Returns a value greater than 0 when the first differing byte in lhs is greater than the corresponding byte in rhs, treating bytes as unsigned char."
+      - id: "string.strcmp.B4"
+        text: "Stops comparison at the first null terminator."

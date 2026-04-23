@@ -9,6 +9,7 @@
 #include "src/string/strcmp.h"
 #include "test/UnitTest/Test.h"
 
+// @verifies string.strcmp.B1
 TEST(LlvmLibcStrCmpTest, EmptyStringsShouldReturnZero) {
   const char *s1 = "";
   const char *s2 = "";
@@ -20,6 +21,7 @@ TEST(LlvmLibcStrCmpTest, EmptyStringsShouldReturnZero) {
   ASSERT_EQ(result, 0);
 }
 
+// @verifies string.strcmp.B2
 TEST(LlvmLibcStrCmpTest, EmptyStringShouldNotEqualNonEmptyString) {
   const char *empty = "";
   const char *s2 = "abc";
@@ -32,6 +34,7 @@ TEST(LlvmLibcStrCmpTest, EmptyStringShouldNotEqualNonEmptyString) {
   ASSERT_GT(result, 0);
 }
 
+// @verifies string.strcmp.B1
 TEST(LlvmLibcStrCmpTest, EqualStringsShouldReturnZero) {
   const char *s1 = "abc";
   const char *s2 = "abc";
@@ -43,6 +46,7 @@ TEST(LlvmLibcStrCmpTest, EqualStringsShouldReturnZero) {
   ASSERT_EQ(result, 0);
 }
 
+// @verifies string.strcmp.B2
 TEST(LlvmLibcStrCmpTest, ShouldReturnResultOfFirstDifference) {
   const char *s1 = "___B42__";
   const char *s2 = "___C55__";
@@ -54,6 +58,7 @@ TEST(LlvmLibcStrCmpTest, ShouldReturnResultOfFirstDifference) {
   ASSERT_GT(result, 0);
 }
 
+// @verifies string.strcmp.B3
 TEST(LlvmLibcStrCmpTest, CapitalizedLetterShouldNotBeEqual) {
   const char *s1 = "abcd";
   const char *s2 = "abCd";
@@ -65,6 +70,7 @@ TEST(LlvmLibcStrCmpTest, CapitalizedLetterShouldNotBeEqual) {
   ASSERT_LT(result, 0);
 }
 
+// @verifies string.strcmp.B4
 TEST(LlvmLibcStrCmpTest, UnequalLengthStringsShouldNotReturnZero) {
   const char *s1 = "abc";
   const char *s2 = "abcd";
@@ -97,6 +103,7 @@ TEST(LlvmLibcStrCmpTest, Case) {
   ASSERT_GT(result, 0);
 }
 
+// @verifies string.strcmp.B3
 TEST(LlvmLibcStrCmpTest, CharactersGreaterThan127ShouldBePositive) {
   const char s1[] = {static_cast<char>(128), '\0'};
   const char s2[] = {'\0'};
