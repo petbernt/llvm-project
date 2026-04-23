@@ -19,6 +19,8 @@ functions:
         text: "If count == 0, performs no reads from src and no writes to dest."
       - id: "string.memcpy.B5"
         text: "Does not write outside dest..dest+count."
+      - id: "string.memcpy.B6"
+        text: "When LIBC_ADD_NULL_CHECKS is enabled, memcpy(nullptr, nullptr, 1) terminates via the configured null-pointer checks."
 
   memset:
     signature: "void *(void *dest, int value, size_t count)"
@@ -36,3 +38,5 @@ functions:
         text: "If count == 0, performs no writes to dest."
       - id: "string.memset.B5"
         text: "Does not write outside dest..dest+count."
+      - id: "string.memset.B6"
+        text: "When LIBC_ADD_NULL_CHECKS is enabled, memset(nullptr, 0, 1) terminates via the configured null-pointer checks."

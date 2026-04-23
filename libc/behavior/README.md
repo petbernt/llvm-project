@@ -23,11 +23,22 @@ built, executed, or passed in a particular run.
 1. Add or update behavior statements in `libc/behavior/*.yaml`.
 2. Annotate tests with `@verifies` comments where the intended relationship is
    clear.
-3. Run the checker from the repository root:
+3. If you want the CMake target, configure libc with:
+
+   `-DLLVM_LIBC_INCLUDE_BEHAVIOR_MAPPING=ON`
+
+4. Run the checker.
+
+   If you configured libc with `LLVM_LIBC_INCLUDE_BEHAVIOR_MAPPING=ON`, prefer
+   the CMake target:
+
+   `ninja -C <build-dir> check-libc-behavior-mapping`
+
+   Or run the script directly from the repository root:
 
    `python3 libc/utils/behavior_mapping_check.py`
 
-4. Review any unknown IDs, duplicate IDs, or unmapped behaviors.
+5. Review any unknown IDs, duplicate IDs, or unmapped behaviors.
 
 ## Checker tests
 

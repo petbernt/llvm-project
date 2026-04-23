@@ -368,6 +368,12 @@ if(LLVM_LIBC_INCLUDE_SCUDO)
   endif()
 endif()
 
+option(
+  LLVM_LIBC_INCLUDE_BEHAVIOR_MAPPING
+  "Enable the experimental libc behavior-to-test mapping checks."
+  OFF
+)
+
 option(LIBC_INCLUDE_DOCS "Build the libc documentation." ${LLVM_INCLUDE_DOCS})
 
 include(LLVMLibCCheckCpuFeatures)

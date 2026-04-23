@@ -1,6 +1,6 @@
 add_subdirectory(hdrgen)
 
-if(LLVM_LIBC_FULL_BUILD)
+if(LLVM_LIBC_INCLUDE_BEHAVIOR_MAPPING)
   enable_testing()
 
   add_test(
