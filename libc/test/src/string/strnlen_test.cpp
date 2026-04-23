@@ -10,6 +10,7 @@
 #include "test/UnitTest/Test.h"
 #include <stddef.h>
 
+// @verifies string.strnlen.B1
 TEST(LlvmLibcStrNLenTest, EmptyString) {
   const char *empty = "";
   ASSERT_EQ(static_cast<size_t>(0), LIBC_NAMESPACE::strnlen(empty, 0));
@@ -17,6 +18,7 @@ TEST(LlvmLibcStrNLenTest, EmptyString) {
   ASSERT_EQ(static_cast<size_t>(0), LIBC_NAMESPACE::strnlen(empty, 1));
 }
 
+// @verifies string.strnlen.B2
 TEST(LlvmLibcStrNLenTest, OneCharacterString) {
   const char *single = "X";
   ASSERT_EQ(static_cast<size_t>(1), LIBC_NAMESPACE::strnlen(single, 1));
@@ -26,6 +28,7 @@ TEST(LlvmLibcStrNLenTest, OneCharacterString) {
   ASSERT_EQ(static_cast<size_t>(1), LIBC_NAMESPACE::strnlen(single, 2));
 }
 
+// @verifies string.strnlen.B3
 TEST(LlvmLibcStrNLenTest, ManyCharacterString) {
   const char *many = "123456789";
   ASSERT_EQ(static_cast<size_t>(9), LIBC_NAMESPACE::strnlen(many, 9));
@@ -37,6 +40,7 @@ TEST(LlvmLibcStrNLenTest, ManyCharacterString) {
   ASSERT_EQ(static_cast<size_t>(9), LIBC_NAMESPACE::strnlen(many, 42));
 }
 
+// @verifies string.strnlen.B2
 TEST(LlvmLibcStrNLenTest, CharactersAfterNullTerminatorShouldNotBeIncluded) {
   const char str[5] = {'a', 'b', 'c', '\0', 'd'};
   ASSERT_EQ(static_cast<size_t>(3), LIBC_NAMESPACE::strnlen(str, 3));

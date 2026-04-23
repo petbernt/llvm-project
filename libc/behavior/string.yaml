@@ -138,3 +138,16 @@ functions:
         text: "Stops comparison at the first null terminator even if count is larger."
       - id: "string.strncmp.B6"
         text: "When LIBC_ADD_NULL_CHECKS is enabled, strncmp(nullptr, nullptr, 1) terminates via the configured null-pointer checks."
+
+  strnlen:
+    signature: "size_t(const char *src, size_t count)"
+    status: experimental
+    preconditions:
+      - "src points to a byte string that is readable for at least count bytes or until an earlier null terminator."
+    behaviors:
+      - id: "string.strnlen.B1"
+        text: "Returns 0 for an empty string."
+      - id: "string.strnlen.B2"
+        text: "Returns the number of bytes before the first null terminator when that terminator appears within the first count bytes."
+      - id: "string.strnlen.B3"
+        text: "Returns count when no null terminator appears within the first count bytes."
