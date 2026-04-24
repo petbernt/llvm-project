@@ -8,11 +8,9 @@ from pathlib import Path
 
 
 def _load_behavior_report_module():
-    repo_root = Path(__file__).resolve().parents[3]
+    repo_root = Path(__file__).resolve().parents[4]
     script_path = repo_root / "libc" / "utils" / "behavior" / "report.py"
-    spec = importlib.util.spec_from_file_location(
-        "behavior_report", script_path
-    )
+    spec = importlib.util.spec_from_file_location("behavior_report", script_path)
     module = importlib.util.module_from_spec(spec)
     assert spec.loader is not None
     spec.loader.exec_module(module)
@@ -82,7 +80,10 @@ class BehaviorReportTest(unittest.TestCase):
             )
             self.assertEqual(code, 0)
             self.assertIn("Behaviors with built test binaries: 1/1", stdout)
-            self.assertIn("libc/test/src/string/libc.test.src.string.memcmp_test.__unit__.__build__", stdout)
+            self.assertIn(
+                "libc/test/src/string/libc.test.src.string.memcmp_test.__unit__.__build__",
+                stdout,
+            )
 
     def test_reports_multi_impl_binaries_for_memcpy(self):
         with tempfile.TemporaryDirectory() as tmpdir:
@@ -178,7 +179,10 @@ class BehaviorReportTest(unittest.TestCase):
             )
             self.assertEqual(code, 1)
             self.assertIn("Behaviors with passing executed tests: 0/1", stdout)
-            self.assertIn("| `string.memset.B1` | Suite.Name | test/src/string/memset_test.cpp |", stdout)
+            self.assertIn(
+                "| `string.memset.B1` | Suite.Name | test/src/string/memset_test.cpp |",
+                stdout,
+            )
             self.assertIn("| fail |", stdout)
 
     def test_writes_json_report(self):

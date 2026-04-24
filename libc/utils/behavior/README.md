@@ -13,13 +13,13 @@ PoC.
 
 ## Tests
 
-- `check_test.py`
+- `tests/check_test.py`
   Unit tests for the source-level validator.
-- `report_test.py`
+- `tests/report_test.py`
   Unit tests for the execution-aware reporter.
 
-The test files are kept next to the scripts for now because the test surface is
-still small.
+The scripts stay at the top of this directory, and their unit tests live under
+`tests/`.
 
 ## Common Commands
 
@@ -38,8 +38,8 @@ python3 libc/utils/behavior/report.py --build-dir <build-dir> --run-tests
 Run the script unit tests:
 
 ```bash
-python3 libc/utils/behavior/check_test.py
-python3 libc/utils/behavior/report_test.py
+python3 libc/utils/behavior/tests/check_test.py
+python3 libc/utils/behavior/tests/report_test.py
 ```
 
 If libc is configured with `LLVM_LIBC_INCLUDE_BEHAVIOR_MAPPING=ON`, CMake also

@@ -76,11 +76,11 @@ libc build.
 Run the checker script tests from the repository root:
 
 ```bash
-python3 libc/utils/behavior/check_test.py
+python3 libc/utils/behavior/tests/check_test.py
 ```
 
 Run the reporting script tests:
 
 ```bash
-python3 libc/utils/behavior/report_test.py
+python3 libc/utils/behavior/tests/report_test.py
 ```

@@ -5,7 +5,7 @@ if(LLVM_LIBC_INCLUDE_BEHAVIOR_MAPPING)
 
   add_test(
     NAME libc_behavior_mapping_check_unit_test
-    COMMAND python3 ${CMAKE_CURRENT_SOURCE_DIR}/behavior/check_test.py
+    COMMAND python3 ${CMAKE_CURRENT_SOURCE_DIR}/behavior/tests/check_test.py
   )
 
   add_test(
@@ -16,7 +16,7 @@ if(LLVM_LIBC_INCLUDE_BEHAVIOR_MAPPING)
 
   add_test(
     NAME libc_behavior_mapping_report_unit_test
-    COMMAND python3 ${CMAKE_CURRENT_SOURCE_DIR}/behavior/report_test.py
+    COMMAND python3 ${CMAKE_CURRENT_SOURCE_DIR}/behavior/tests/report_test.py
   )
 
   add_custom_target(check-libc-behavior-mapping
