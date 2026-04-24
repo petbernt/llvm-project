@@ -3,107 +3,84 @@
 This directory contains small, non-normative behavior descriptions for selected
 llvm-libc functions.
 
-For a branch-local workflow describing how to use this PoC to build
-qualification-style evidence for one function at a time, see:
+The PoC is centered on two questions:
+- which behaviors are documented?
+- which tests claim to verify them?
 
-`libc/behavior/methodology.md`
+For the workflow document, see `libc/behavior/methodology.md`.
 
-The immediate goal is to make it easier to answer questions such as:
-- where is a specific libc behavior tested?
-- which documented behaviors currently have no mapped test?
-- which test claims to verify a given behavior?
+## Layout
 
-The current experiment is intentionally narrow:
-- behavior metadata lives in `libc/behavior/*.yaml`
-- tests in `libc/test/` can declare intended coverage with
-  `// @verifies <BEHAVIOR_ID>` comments placed directly above the matching test
-- `libc/utils/behavior_mapping_check.py` validates that the metadata and
-  annotations are internally consistent
-- `libc/utils/behavior_mapping_report.py` can optionally match those annotated
-  test files to built test executables in a build tree and report pass/fail
-  status for executed binaries
-- the current scope focuses on simple string and memory primitives that are
-  common in low-level code, currently `memcpy`, `memset`, `memcmp`, `memchr`,
-  `strlen`, `memrchr`, `strcmp`, `strncmp`, `strnlen`, `strchr`, `strrchr`,
-  `strcspn`, `strspn`, and `strnlen_s`
+- `libc/behavior/*.yaml`
+  Behavior metadata for the currently modeled functions.
+- `libc/utils/behavior/check.py`
+  Source-level validator for behavior IDs and `@verifies` annotations.
+- `libc/utils/behavior/report.py`
+  Execution-aware report that maps annotations to built unit-test binaries.
 
-The validator is source-level only. The reporting script adds an optional
-execution-aware layer when you point it at a build tree.
+## What The Scripts Do
 
-## Current workflow
+- `check.py`
+  Reads the YAML files and test annotations, then reports unknown IDs,
+  duplicate IDs, and documented behaviors that still have no mapped test.
+- `report.py`
+  Starts from the same mapping, then looks in a build tree for the matching
+  unit-test binaries. It can also run those binaries and emit JSON.
 
-1. Add or update behavior statements in `libc/behavior/*.yaml`.
-2. Annotate tests with `@verifies` comments where the intended relationship is
-   clear.
-3. If you want the CMake target, configure libc with:
+The layering is intentional:
+- use `check.py` to validate the mapping
+- use `report.py` to confirm the mapped tests exist and run
 
-   `-DLLVM_LIBC_INCLUDE_BEHAVIOR_MAPPING=ON`
+## Common Commands
 
-4. Run the checker.
+Run the source-level validator:
 
-   If you configured libc with `LLVM_LIBC_INCLUDE_BEHAVIOR_MAPPING=ON`, prefer
-   the CMake target:
+```bash
+python3 libc/utils/behavior/check.py
+```
 
-   `ninja -C <build-dir> check-libc-behavior-mapping`
+Run the validator through CMake after configuring libc with
+`-DLLVM_LIBC_INCLUDE_BEHAVIOR_MAPPING=ON`:
 
-   Or run the script directly from the repository root:
+```bash
+ninja -C <build-dir> check-libc-behavior-mapping
+```
 
-   `python3 libc/utils/behavior_mapping_check.py`
+Run the execution-aware report and execute the discovered test binaries.
+If `--functions` is omitted, it reports all functions with behavior IDs
+declared in `libc/behavior/*.yaml`:
 
-5. Review any unknown IDs, duplicate IDs, or unmapped behaviors.
+```bash
+python3 libc/utils/behavior/report.py --build-dir <build-dir> --run-tests
+```
 
-## Execution-aware report
+Limit that report to selected functions:
 
-If you have a libc build tree with the relevant tests built, you can also ask
-for a report that joins the source annotations to discovered test executables:
+```bash
+python3 libc/utils/behavior/report.py \
+  --build-dir <build-dir> \
+  --functions memcpy memset
+```
 
-`python3 libc/utils/behavior_mapping_report.py --build-dir <build-dir>`
+## Notes
 
-To execute the discovered test binaries and include pass/fail status:
+The source-level checker is the first consistency gate. It answers whether the
+metadata and annotations agree, not whether the corresponding binaries were
+built or executed.
 
-`python3 libc/utils/behavior_mapping_report.py --build-dir <build-dir> --run-tests`
+The report script adds that build-tree view when you point it at an existing
+libc build.
 
-To limit the report to selected functions:
+## Script Tests
 
-`python3 libc/utils/behavior_mapping_report.py --build-dir <build-dir> --functions memcpy memset`
+Run the checker script tests from the repository root:
 
-If you configured libc with `LLVM_LIBC_INCLUDE_BEHAVIOR_MAPPING=ON`, there is
-also a convenience target:
+```bash
+python3 libc/utils/behavior/check_test.py
+```
 
-`ninja -C <build-dir> report-libc-behavior-mapping`
+Run the reporting script tests:
 
-The report script can also write JSON for downstream processing:
-
-`python3 libc/utils/behavior_mapping_report.py --build-dir <build-dir> --run-tests --json-output report.json`
-
-This is a better fit than the validator when you want evidence that a mapped
-test binary was actually built and, optionally, executed successfully.
-
-## Notes for memcpy / memset
-
-`memcpy_test.cpp` and `memset_test.cpp` currently mix portable and host-OS
-specific coverage.
-
-Portable tests:
-- `SizeSweep` in both files does not depend on Linux protected pages.
-- `CrashOnNullPtr` in both files does not use protected pages either, but it is
-  only built when `LIBC_ADD_NULL_CHECKS` is enabled and still depends on the
-  hosted death-test executor rather than bare-metal execution.
-
-Linux protected-page tests:
-- `ZeroCountDoesNotAccessMemory`
-- `CheckAccess`
-
-Those are both guarded by:
-
-`#if !defined(LIBC_FULL_BUILD) && defined(LIBC_TARGET_OS_IS_LINUX)`
-
-## Checker tests
-
-Run the checker unit tests from the repository root with:
-
-`python3 libc/utils/behavior_mapping_check_test.py`
-
-Run the reporting-script unit tests from the repository root with:
-
-`python3 libc/utils/behavior_mapping_report_test.py`
+```bash
+python3 libc/utils/behavior/report_test.py
+```

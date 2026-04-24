@@ -159,7 +159,7 @@ def main(argv: list[str]) -> int:
     parser.add_argument(
         "--libc-dir",
         type=Path,
-        default=Path(__file__).resolve().parents[1],
+        default=Path(__file__).resolve().parents[2],
         help="Path to libc/ (defaults relative to this script).",
     )
     args = parser.parse_args(argv)

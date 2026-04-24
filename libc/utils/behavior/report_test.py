@@ -8,10 +8,10 @@ from pathlib import Path
 
 
 def _load_behavior_report_module():
-    repo_root = Path(__file__).resolve().parents[2]
-    script_path = repo_root / "libc" / "utils" / "behavior_mapping_report.py"
+    repo_root = Path(__file__).resolve().parents[3]
+    script_path = repo_root / "libc" / "utils" / "behavior" / "report.py"
     spec = importlib.util.spec_from_file_location(
-        "behavior_mapping_report", script_path
+        "behavior_report", script_path
     )
     module = importlib.util.module_from_spec(spec)
     assert spec.loader is not None

@@ -7,10 +7,10 @@ from pathlib import Path
 
 
 def _load_behavior_check_module():
-    repo_root = Path(__file__).resolve().parents[2]
-    script_path = repo_root / "libc" / "utils" / "behavior_mapping_check.py"
+    repo_root = Path(__file__).resolve().parents[3]
+    script_path = repo_root / "libc" / "utils" / "behavior" / "check.py"
     spec = importlib.util.spec_from_file_location(
-        "behavior_mapping_check", script_path
+        "behavior_check", script_path
     )
     module = importlib.util.module_from_spec(spec)
     assert spec.loader is not None

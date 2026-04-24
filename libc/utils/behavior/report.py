@@ -2,9 +2,9 @@
 
 """Execution-aware report for llvm-libc behavior mappings.
 
-This complements `behavior_mapping_check.py`:
+This complements `check.py`:
 
-- `behavior_mapping_check.py` validates source-level consistency
+- `check.py` validates source-level consistency
 - this script optionally joins that mapping data to built test executables in a
   build tree, and can also execute those test binaries
 
@@ -25,7 +25,7 @@ from collections import defaultdict
 from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
-from behavior_mapping_check import _discover_behavior_ids, _discover_verifies
+from check import _discover_behavior_ids, _discover_verifies
 
 
 _EXECUTABLE_SUFFIX_RE = (
@@ -374,7 +374,7 @@ def main(argv: list[str]) -> int:
     parser.add_argument(
         "--libc-dir",
         type=Path,
-        default=Path(__file__).resolve().parents[1],
+        default=Path(__file__).resolve().parents[2],
         help="Path to libc/ (defaults relative to this script).",
     )
     parser.add_argument(
