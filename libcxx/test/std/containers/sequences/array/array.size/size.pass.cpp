@@ -22,6 +22,7 @@ int main(int, char**) {
     C c = {1, 2, 3.5};
     // @verifies array.capacity.size.B1
     assert(c.size() == 3);
+    // @verifies array.capacity.max_size.B1
     assert(c.max_size() == 3);
     assert(!c.empty());
   }
