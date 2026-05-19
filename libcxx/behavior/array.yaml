@@ -28,3 +28,14 @@ functions:
       - id: "array.capacity.empty.B2"
         kind: "Interface"
         text: "empty() is noexcept."
+
+  std::array::data:
+    standard_section: "[array.data]"
+    status: experimental
+    behaviors:
+      - id: "array.data.B1"
+        kind: "Returns"
+        text: "For a non-empty array, data() returns a pointer to the first element."
+      - id: "array.data.B2"
+        kind: "Interface"
+        text: "data() is noexcept."
