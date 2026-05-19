@@ -48,7 +48,9 @@ struct Test {
     int ib[N] = {0};
 
     OutIter r = std::copy(InIter(ia), InIter(ia + N), OutIter(ib));
+    // @verifies algorithm.copy.B2
     assert(base(r) == ib + N);
+    // @verifies algorithm.copy.B1
     for (unsigned i = 0; i < N; ++i)
       assert(ia[i] == ib[i]);
   }
@@ -92,6 +94,7 @@ TEST_CONSTEXPR_CXX20 bool test() {
     std::copy(static_cast<PaddedBase*>(&src), static_cast<PaddedBase*>(&src) + 1, static_cast<PaddedBase*>(&dst));
     assert(dst.a_ == 1);
     assert(dst.b_ == 2);
+    // @verifies algorithm.copy.B3
     assert(dst.c_ == 6);
   }
   { // Make sure that overlapping ranges can be copied

@@ -1,0 +1,22 @@
+component: libc++
+header: "<algorithm>"
+
+functions:
+  std::copy:
+    standard_section: "[alg.copy]"
+    signature: "template<class InputIterator, class OutputIterator> constexpr OutputIterator copy(InputIterator first, InputIterator last, OutputIterator result)"
+    status: experimental
+    preconditions:
+      - "[first, last) is a valid range."
+      - "result denotes the start of a range with enough writable elements for distance(first, last) assignments."
+      - "result is not in the range [first, last)."
+    behaviors:
+      - id: "algorithm.copy.B1"
+        kind: "Effects"
+        text: "Copies each element in [first, last) into the result range beginning at result."
+      - id: "algorithm.copy.B2"
+        kind: "Returns"
+        text: "Returns an iterator to the end of the result range."
+      - id: "algorithm.copy.B3"
+        kind: "Effects"
+        text: "Does not modify elements outside the output range corresponding to [first, last)."
