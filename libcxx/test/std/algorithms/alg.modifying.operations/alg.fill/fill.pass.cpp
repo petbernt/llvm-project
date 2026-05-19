@@ -31,6 +31,8 @@ template <class Iter, class Container>
 TEST_CONSTEXPR_CXX20 void
 test(Container in, size_t from, size_t to, typename Container::value_type value, Container expected) {
   std::fill(Iter(in.data() + from), Iter(in.data() + to), value);
+  // @verifies algorithm.fill.B1
+  // @verifies algorithm.fill.B2
   assert(in == expected);
 }
 
@@ -106,6 +108,14 @@ TEST_CONSTEXPR_CXX20 bool test_vector_bool(std::size_t N) {
 TEST_CONSTEXPR_CXX20 bool test() {
   types::for_each(types::forward_iterator_list<char*>(), Test<char>());
   types::for_each(types::forward_iterator_list<int*>(), Test<int>());
+
+  {
+    std::array<int, 4> in       = {1, 2, 3, 4};
+    std::array<int, 4> expected = {1, 2, 3, 4};
+    std::fill(in.begin(), in.begin(), 9);
+    // @verifies algorithm.fill.B3
+    assert(in == expected);
+  }
 
   { // Test vector<bool>::iterator optimization
     assert(test_vector_bool(8));

@@ -20,3 +20,21 @@ functions:
       - id: "algorithm.copy.B3"
         kind: "Effects"
         text: "Does not modify elements outside the output range corresponding to [first, last)."
+
+  std::fill:
+    standard_section: "[alg.fill]"
+    signature: "template<class ForwardIterator, class T> constexpr void fill(ForwardIterator first, ForwardIterator last, const T& value)"
+    status: experimental
+    preconditions:
+      - "[first, last) is a valid range."
+      - "Every iterator in [first, last) is writable with value."
+    behaviors:
+      - id: "algorithm.fill.B1"
+        kind: "Effects"
+        text: "Assigns value through every iterator in [first, last)."
+      - id: "algorithm.fill.B2"
+        kind: "Effects"
+        text: "Does not assign through iterators outside [first, last)."
+      - id: "algorithm.fill.B3"
+        kind: "Effects"
+        text: "For an empty range, performs no assignments."
