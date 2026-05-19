@@ -21,6 +21,7 @@ TEST_CONSTEXPR_CXX14 bool tests() {
   {
     typedef std::array<int, 2> C;
     C c = {};
+    // @verifies array.capacity.empty.B2
     ASSERT_NOEXCEPT(c.empty());
     assert(!c.empty());
   }

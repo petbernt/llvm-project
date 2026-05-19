@@ -24,6 +24,7 @@ int main(int, char**) {
     assert(c.size() == 3);
     // @verifies array.capacity.max_size.B1
     assert(c.max_size() == 3);
+    // @verifies array.capacity.empty.B1
     assert(!c.empty());
   }
   {

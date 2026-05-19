@@ -17,3 +17,14 @@ functions:
       - id: "array.capacity.max_size.B1"
         kind: "Returns"
         text: "max_size() returns the same value as size()."
+
+  std::array::empty:
+    standard_section: "[array.capacity]"
+    status: experimental
+    behaviors:
+      - id: "array.capacity.empty.B1"
+        kind: "Returns"
+        text: "empty() returns true if and only if the array has zero elements."
+      - id: "array.capacity.empty.B2"
+        kind: "Interface"
+        text: "empty() is noexcept."
