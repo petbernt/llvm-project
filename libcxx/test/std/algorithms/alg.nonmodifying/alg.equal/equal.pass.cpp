@@ -46,7 +46,9 @@ struct Test {
     const unsigned s    = sizeof(a) / sizeof(a[0]);
     UnderlyingType b[s] = {0, 1, 2, 5, 4, 5};
 
+    // @verifies algorithm.equal.B1
     assert(std::equal(Iter1(a), Iter1(a + s), Iter2(a)));
+    // @verifies algorithm.equal.B2
     assert(!std::equal(Iter1(a), Iter1(a + s), Iter2(b)));
 
 #if TEST_STD_VER >= 14
@@ -54,6 +56,7 @@ struct Test {
     assert(!std::equal(Iter1(a), Iter1(a + s), Iter2(b), std::equal_to<>()));
 
     assert(std::equal(Iter1(a), Iter1(a + s), Iter2(a), Iter2(a + s)));
+    // @verifies algorithm.equal.B3
     assert(!std::equal(Iter1(a), Iter1(a + s), Iter2(a), Iter2(a + s - 1)));
     assert(!std::equal(Iter1(a), Iter1(a + s), Iter2(b), Iter2(b + s)));
 
@@ -153,6 +156,13 @@ TEST_CONSTEXPR_CXX20 void test_vector_bool() {
 }
 
 TEST_CONSTEXPR_CXX20 bool test() {
+  {
+    int a[] = {1};
+    int b[] = {2};
+    // @verifies algorithm.equal.B4
+    assert(std::equal(a, a, b));
+  }
+
   types::for_each(types::cpp17_input_iterator_list<int*>(), TestIter2<int, types::cpp17_input_iterator_list<int*> >());
   types::for_each(
       types::cpp17_input_iterator_list<char*>(), TestIter2<char, types::cpp17_input_iterator_list<char*> >());

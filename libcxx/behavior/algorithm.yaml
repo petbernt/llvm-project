@@ -38,3 +38,26 @@ functions:
       - id: "algorithm.fill.B3"
         kind: "Effects"
         text: "For an empty range, performs no assignments."
+
+  std::equal:
+    standard_section: "[alg.equal]"
+    signature: "template<class InputIterator1, class InputIterator2> constexpr bool equal(InputIterator1 first1, InputIterator1 last1, InputIterator2 first2)"
+    status: experimental
+    preconditions:
+      - "[first1, last1) is a valid range."
+      - "For the three-iterator overload, the range beginning at first2 has at least distance(first1, last1) readable elements."
+      - "For the four-iterator overload, [first2, last2) is a valid range."
+      - "Corresponding elements can be compared for equality."
+    behaviors:
+      - id: "algorithm.equal.B1"
+        kind: "Returns"
+        text: "Returns true when every element in [first1, last1) compares equal to the corresponding element starting at first2."
+      - id: "algorithm.equal.B2"
+        kind: "Returns"
+        text: "Returns false when any compared pair of elements is not equal."
+      - id: "algorithm.equal.B3"
+        kind: "Returns"
+        text: "For the four-iterator overload, returns false when the compared ranges have different lengths."
+      - id: "algorithm.equal.B4"
+        kind: "Returns"
+        text: "For an empty first range, returns true."
