@@ -1,0 +1,11 @@
+component: libc++
+header: "<array>"
+
+functions:
+  std::array::size:
+    standard_section: "[array.capacity]"
+    status: experimental
+    behaviors:
+      - id: "array.capacity.size.B1"
+        kind: "Returns"
+        text: "size() returns the number of elements in the array."

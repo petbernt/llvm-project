@@ -20,6 +20,7 @@ int main(int, char**) {
     typedef double T;
     typedef std::array<T, 3> C;
     C c = {1, 2, 3.5};
+    // @verifies array.capacity.size.B1
     assert(c.size() == 3);
     assert(c.max_size() == 3);
     assert(!c.empty());
