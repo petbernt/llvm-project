@@ -130,6 +130,8 @@ option(LIBCXX_ENABLE_THREADS "Build libc++ with support for threads." ON)
 option(LIBCXX_ENABLE_MONOTONIC_CLOCK
   "Build libc++ with support for a monotonic clock.
   This option may only be set to OFF when LIBCXX_ENABLE_THREADS=OFF." ON)
+option(LIBCXX_INCLUDE_BEHAVIOR_MAPPING
+  "Enable the experimental libc++ behavior-to-test mapping checks." OFF)
 
 # To use time zone support in libc++ the platform needs to have the IANA
 # database installed. Libc++ will fail to build if this is enabled on a

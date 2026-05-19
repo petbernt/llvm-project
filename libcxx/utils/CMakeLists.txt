@@ -61,3 +61,26 @@ add_custom_target(libcxx-generate-files
             libcxx-generate-width-estimation-table
             libcxx-indic-conjunct-break-table
     COMMENT "Create all the auto-generated files in libc++ and its tests.")
+
+if(LIBCXX_INCLUDE_BEHAVIOR_MAPPING)
+  enable_testing()
+
+  add_test(
+    NAME libcxx_behavior_mapping_check_unit_test
+    COMMAND "${Python3_EXECUTABLE}"
+            "${LIBCXX_SOURCE_DIR}/utils/behavior/tests/check_test.py"
+  )
+
+  add_test(
+    NAME libcxx_behavior_mapping_check
+    COMMAND "${Python3_EXECUTABLE}"
+            "${LIBCXX_SOURCE_DIR}/utils/behavior/check.py"
+            --libcxx-dir "${LIBCXX_SOURCE_DIR}"
+  )
+
+  add_custom_target(check-libcxx-behavior-mapping
+    COMMAND ${CMAKE_CTEST_COMMAND} -R libcxx_behavior_mapping_ --output-on-failure
+  )
+
+  message(STATUS "libc++ behavior mapping checks added.")
+endif()
