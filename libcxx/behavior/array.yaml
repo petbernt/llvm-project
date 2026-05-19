@@ -39,3 +39,17 @@ functions:
       - id: "array.data.B2"
         kind: "Interface"
         text: "data() is noexcept."
+
+  std::array::fill:
+    standard_section: "[array.fill]"
+    signature: "constexpr void fill(const T& value)"
+    status: experimental
+    preconditions:
+      - "value is assignable to every element of the array."
+    behaviors:
+      - id: "array.fill.B1"
+        kind: "Effects"
+        text: "Assigns value to every element of the array."
+      - id: "array.fill.B2"
+        kind: "Effects"
+        text: "For a zero-sized array, performs no element assignments."
