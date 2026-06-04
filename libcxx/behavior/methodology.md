@@ -1,7 +1,7 @@
-# Methodology for Behavior Mapping
+# Methodology for Conformance Test Traceability
 
-This PoC is a lightweight workflow for attaching explicit verification intent to
-selected libc++ tests. It is meant to answer a practical question:
+This PoC is a lightweight workflow for attaching explicit conformance-test
+intent to selected libc++ tests. It is meant to answer a practical question:
 
 "Can we describe a standard-library API's externally visible behavior, map that
 behavior to tests, and check that the mapping does not silently drift?"
@@ -68,7 +68,7 @@ ninja -C <build-dir> check-libcxx-behavior-mapping
 ## Limitations
 
 - This is not certification evidence by itself.
-- It does not provide a complete requirements-to-design-to-implementation trace.
+- It does not provide a complete downstream evidence package.
 - It does not attempt coverage measurement yet.
 - It depends on source annotations in libc++ tests.
 - Some behaviors may need further review to confirm that they are the right

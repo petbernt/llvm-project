@@ -1,26 +1,28 @@
-# libc++ behavior mapping experiment
+# libc++ conformance test traceability
 
 This directory contains small, non-normative behavior descriptions for selected
-libc++ standard-library APIs.
+libc++ standard-library APIs and maps them to the tests that claim to verify
+them.
 
-The PoC is centered on three questions:
-- which externally visible behaviors are documented?
-- which libc++ tests claim to verify them?
-- does the source-level mapping stay internally consistent?
+The experiment is centered on three questions:
+- which externally visible behaviors have lightweight descriptions?
+- which libc++ tests claim to verify those behaviors?
+- does the source-level traceability stay internally consistent?
 
 For the workflow document, see `libcxx/behavior/methodology.md`.
 
 ## Layout
 
 - `libcxx/behavior/*.yaml`
-  Behavior metadata for the currently modeled APIs. Files are grouped by
+  Behavior descriptions for the currently modeled APIs. Files are grouped by
   standard-library header, for example `algorithm.yaml` and `array.yaml`.
 - `libcxx/utils/behavior/check.py`
   Source-level validator for behavior IDs and `@verifies` annotations.
 
 ## What The Checker Does
 
-`check.py` reads the YAML files and libc++ test annotations, then reports:
+`check.py` reads the behavior YAML files and libc++ test annotations, then
+reports:
 - unknown IDs referenced from tests
 - duplicate IDs in the metadata
 - documented behaviors that still have no mapped test
@@ -56,5 +58,5 @@ python3 libcxx/utils/behavior/tests/check_test.py
 ## Scope
 
 This is not certification evidence by itself. It is a lightweight experiment for
-making test intent queryable and for detecting drift between selected
+making conformance-test intent queryable and for detecting drift between selected
 standard-library behavior descriptions and libc++ tests.

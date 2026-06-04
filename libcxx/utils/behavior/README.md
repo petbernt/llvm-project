@@ -1,6 +1,7 @@
-# Behavior Utility Scripts
+# Conformance Test Traceability Utility Scripts
 
-This directory contains helper scripts used by the libc++ behavior-mapping PoC.
+This directory contains helper scripts used by the libc++ conformance test
+traceability PoC.
 
 ## Scripts
 
