@@ -3,45 +3,51 @@ header: "<array>"
 
 functions:
   std::array::size:
-    standard_section: "[array.capacity]"
+    source: { authority: "iso_cpp", clause: "[array.capacity]" }
     status: experimental
     behaviors:
       - id: "array.capacity.size.B1"
         kind: "Returns"
+        source: { inherits: "function", classification: "mandated" }
         text: "size() returns the number of elements in the array."
 
   std::array::max_size:
-    standard_section: "[array.capacity]"
+    source: { authority: "iso_cpp", clause: "[array.capacity]" }
     status: experimental
     behaviors:
       - id: "array.capacity.max_size.B1"
         kind: "Returns"
+        source: { inherits: "function", classification: "mandated" }
         text: "max_size() returns the same value as size()."
 
   std::array::empty:
-    standard_section: "[array.capacity]"
+    source: { authority: "iso_cpp", clause: "[array.capacity]" }
     status: experimental
     behaviors:
       - id: "array.capacity.empty.B1"
         kind: "Returns"
+        source: { inherits: "function", classification: "mandated" }
         text: "empty() returns true if and only if the array has zero elements."
       - id: "array.capacity.empty.B2"
         kind: "Interface"
+        source: { inherits: "function", classification: "mandated" }
         text: "empty() is noexcept."
 
   std::array::data:
-    standard_section: "[array.data]"
+    source: { authority: "iso_cpp", clause: "[array.data]" }
     status: experimental
     behaviors:
       - id: "array.data.B1"
         kind: "Returns"
+        source: { inherits: "function", classification: "mandated" }
         text: "For a non-empty array, data() returns a pointer to the first element."
       - id: "array.data.B2"
         kind: "Interface"
+        source: { inherits: "function", classification: "mandated" }
         text: "data() is noexcept."
 
   std::array::fill:
-    standard_section: "[array.fill]"
+    source: { authority: "iso_cpp", clause: "[array.fill]" }
     signature: "constexpr void fill(const T& value)"
     status: experimental
     preconditions:
@@ -49,7 +55,9 @@ functions:
     behaviors:
       - id: "array.fill.B1"
         kind: "Effects"
+        source: { inherits: "function", classification: "mandated" }
         text: "Assigns value to every element of the array."
       - id: "array.fill.B2"
         kind: "Effects"
+        source: { inherits: "function", classification: "mandated" }
         text: "For a zero-sized array, performs no element assignments."

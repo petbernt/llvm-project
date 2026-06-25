@@ -3,7 +3,7 @@ header: "<algorithm>"
 
 functions:
   std::copy:
-    standard_section: "[alg.copy]"
+    source: { authority: "iso_cpp", clause: "[alg.copy]" }
     signature: "template<class InputIterator, class OutputIterator> constexpr OutputIterator copy(InputIterator first, InputIterator last, OutputIterator result)"
     status: experimental
     preconditions:
@@ -13,16 +13,19 @@ functions:
     behaviors:
       - id: "algorithm.copy.B1"
         kind: "Effects"
+        source: { inherits: "function", classification: "mandated" }
         text: "Copies each element in [first, last) into the result range beginning at result."
       - id: "algorithm.copy.B2"
         kind: "Returns"
+        source: { inherits: "function", classification: "mandated" }
         text: "Returns an iterator to the end of the result range."
       - id: "algorithm.copy.B3"
         kind: "Effects"
+        source: { inherits: "function", classification: "mandated" }
         text: "Does not modify elements outside the output range corresponding to [first, last)."
 
   std::fill:
-    standard_section: "[alg.fill]"
+    source: { authority: "iso_cpp", clause: "[alg.fill]" }
     signature: "template<class ForwardIterator, class T> constexpr void fill(ForwardIterator first, ForwardIterator last, const T& value)"
     status: experimental
     preconditions:
@@ -31,16 +34,19 @@ functions:
     behaviors:
       - id: "algorithm.fill.B1"
         kind: "Effects"
+        source: { inherits: "function", classification: "mandated" }
         text: "Assigns value through every iterator in [first, last)."
       - id: "algorithm.fill.B2"
         kind: "Effects"
+        source: { inherits: "function", classification: "mandated" }
         text: "Does not assign through iterators outside [first, last)."
       - id: "algorithm.fill.B3"
         kind: "Effects"
+        source: { inherits: "function", classification: "mandated" }
         text: "For an empty range, performs no assignments."
 
   std::equal:
-    standard_section: "[alg.equal]"
+    source: { authority: "iso_cpp", clause: "[alg.equal]" }
     signature: "template<class InputIterator1, class InputIterator2> constexpr bool equal(InputIterator1 first1, InputIterator1 last1, InputIterator2 first2)"
     status: experimental
     preconditions:
@@ -51,13 +57,17 @@ functions:
     behaviors:
       - id: "algorithm.equal.B1"
         kind: "Returns"
+        source: { inherits: "function", classification: "mandated" }
         text: "Returns true when every element in [first1, last1) compares equal to the corresponding element starting at first2."
       - id: "algorithm.equal.B2"
         kind: "Returns"
+        source: { inherits: "function", classification: "mandated" }
         text: "Returns false when any compared pair of elements is not equal."
       - id: "algorithm.equal.B3"
         kind: "Returns"
+        source: { inherits: "function", classification: "mandated" }
         text: "For the four-iterator overload, returns false when the compared ranges have different lengths."
       - id: "algorithm.equal.B4"
         kind: "Returns"
+        source: { inherits: "function", classification: "mandated" }
         text: "For an empty first range, returns true."
