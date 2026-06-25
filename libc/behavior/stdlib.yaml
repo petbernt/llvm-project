@@ -1,0 +1,34 @@
+header: stdlib.h
+component: llvm-libc
+
+functions:
+  strtol:
+    source: { authority: "iso_c", standard: "C23", clause: "7.24.1.7" }
+    signature: "long(const char *str, char **str_end, int base)"
+    status: experimental
+    preconditions:
+      - "str points to a null-terminated byte string."
+      - "For ISO C behavior, base is 0 or in [2, 36]."
+      - "If str_end is not null, it points to storage for a char *."
+    behaviors:
+      - id: "stdlib.strtol.B1"
+        source: { inherits: "function", classification: "mandated" }
+        text: "Skips leading whitespace, accepts an optional sign, and converts the longest subject sequence valid for base."
+      - id: "stdlib.strtol.B2"
+        source: { inherits: "function", classification: "mandated" }
+        text: "When base is 0, infers the conversion base from the subject sequence prefix, including C23 binary prefixes."
+      - id: "stdlib.strtol.B3"
+        source: { inherits: "function", classification: "mandated" }
+        text: "When str_end is not null and conversion succeeds, stores a pointer to the first character after the converted subject sequence."
+      - id: "stdlib.strtol.B4"
+        source: { inherits: "function", classification: "mandated" }
+        text: "When no conversion is performed, returns 0 and stores str in str_end if str_end is not null."
+      - id: "stdlib.strtol.B5"
+        source: { inherits: "function", classification: "mandated" }
+        text: "When the converted value is outside the range of long, returns LONG_MIN or LONG_MAX and sets errno to ERANGE."
+      - id: "stdlib.strtol.B6"
+        source: { authority: "posix", standard: "POSIX.1-2024", classification: "permitted", reference: "strtol" }
+        text: "When base is unsupported, llvm-libc takes the POSIX-permitted EINVAL path: returns 0 and sets errno to EINVAL."
+      - id: "stdlib.strtol.B7"
+        source: { authority: "llvm_libc", classification: "documented_choice", reference: "strtol invalid-base handling" }
+        text: "When base is unsupported and str_end is not null, leaves str_end unmodified."
