@@ -33,7 +33,9 @@ not as complete evidence for every architecture-specific implementation.
    Start small. A single function is the intended unit of work.
 
 2. Add behavior entries.
-   Describe externally visible behavior in `libc/behavior/*.yaml`.
+   Describe externally visible behavior in `libc/behavior/*.yaml`. Include
+   source metadata that distinguishes ISO C, POSIX, extension, and LLVM-libc
+   documented-choice behavior.
 
 3. Map behaviors to tests.
    Add `// @verifies <BEHAVIOR_ID>` directly above the test case that is meant
