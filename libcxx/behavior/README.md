@@ -1,62 +1,34 @@
-# libc++ conformance test traceability
+# libc++ behavior-to-test traceability
 
-This directory contains small, non-normative behavior descriptions for selected
-libc++ standard-library APIs and maps them to the tests that claim to verify
-them.
+This opt-in PoC makes the intended relationship between selected libc++ behaviors
+and their tests explicit:
 
-The experiment is centered on three questions:
-- which externally visible behaviors have lightweight descriptions?
-- which libc++ tests claim to verify those behaviors?
-- does the source-level traceability stay internally consistent?
+**Standard or documented choice → behavior ID → test source location**
 
-For the workflow document, see `libcxx/behavior/methodology.md`.
+Behavior descriptions in [algorithm.yaml](algorithm.yaml) and
+[array.yaml](array.yaml) record source references and stable behavior IDs. The
+current scope is `std::copy`, `std::fill`, `std::equal`, and selected `std::array`
+operations. These are concise, non-normative descriptions, maintained through
+normal code review.
 
-## Layout
+Tests reference the IDs through `// @verifies` annotations near relevant
+assertions or helper blocks. The checker reports each annotation's file and line,
+which suits libc++ tests containing several checks in one file. It detects
+unmapped behaviors, unknown references, duplicate behavior IDs, and an empty
+behavior inventory.
 
-- `libcxx/behavior/*.yaml`
-  Behavior descriptions for the currently modeled APIs. Files are grouped by
-  standard-library header, for example `algorithm.yaml` and `array.yaml`.
-- `libcxx/utils/behavior/check.py`
-  Source-level validator for behavior IDs and `@verifies` annotations.
+The workflow validates these source-level links locally or in CI, without
+building libc++ or running its tests. Reviewers assess the source interpretation,
+behavior descriptions, and whether assertions adequately verify them. A passing
+check establishes mapping consistency.
 
-## What The Checker Does
+The metadata model and YAML schema validation remain
+[future work](methodology.md#metadata-schema-future-work). A passing traceability
+check does not establish that the complete YAML metadata is valid.
 
-`check.py` reads the behavior YAML files and libc++ test annotations, then
-reports:
-- unknown IDs referenced from tests
-- duplicate IDs in the metadata
-- documented behaviors that still have no mapped test
+Optional [AI workflows](methodology.md#optional-ai-workflows-future-work) for
+drafting behaviors, finding tests, and adding missing tests are also future work.
 
-Unlike the libc PoC, this checker maps annotations to source locations rather
-than to GTest case names. libc++ tests are lit tests and commonly express several
-checks inside helper functions or blocks, so file-and-line locations are a
-better fit for an initial libc++ experiment.
-
-## Common Commands
-
-Run the source-level validator:
-
-```bash
-python3 libcxx/utils/behavior/check.py
-```
-
-Run the validator through CMake after configuring libc++ with
-`-DLIBCXX_INCLUDE_BEHAVIOR_MAPPING=ON`:
-
-```bash
-ninja -C <build-dir> check-libcxx-behavior-mapping
-```
-
-## Script Tests
-
-Run the checker script tests from the repository root:
-
-```bash
-python3 libcxx/utils/behavior/tests/check_test.py
-```
-
-## Scope
-
-This is not certification evidence by itself. It is a lightweight experiment for
-making conformance-test intent queryable and for detecting drift between selected
-standard-library behavior descriptions and libc++ tests.
+Start with the [workflow](methodology.md) for a worked example and CI setup.
+The [tool reference](../utils/behavior/README.md) lists commands, supported input,
+and checker tests.
