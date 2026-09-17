@@ -1,51 +1,37 @@
-# Behavior Utility Scripts
+# Behavior traceability checker
 
-This directory contains the helper scripts used by the libc behavior-mapping
-PoC.
+See the [overview](../../behavior/README.md) for the concept and the
+[methodology](../../behavior/methodology.md) for adding behaviors and annotations.
+Run the commands below from the repository root.
 
-## Scripts
+## Traceability checker
 
-- `check.py`
-  Source-level validator for behavior YAML files and `@verifies` annotations.
-- `report.py`
-  Execution-aware reporter that maps annotations to built unit-test binaries and
-  can run them.
-
-## Tests
-
-- `tests/check_test.py`
-  Unit tests for the source-level validator.
-- `tests/report_test.py`
-  Unit tests for the execution-aware reporter.
-
-The scripts stay at the top of this directory, and their unit tests live under
-`tests/`.
-
-## Common Commands
-
-Run the source-level validator from the repository root:
+`check.py` validates behavior IDs and their `@verifies` references in test source.
+It prints the mapping and fails on unmapped behaviors, unknown IDs, duplicate
+IDs, or dangling annotations. No configuration or build is required:
 
 ```bash
 python3 libc/utils/behavior/check.py
 ```
 
-Run the execution-aware report against an existing libc build:
+The checker extracts IDs from the files; it does not validate YAML syntax or a
+metadata schema. See [planned schema validation](../../behavior/methodology.md#metadata-schema-future-work).
 
-```bash
-python3 libc/utils/behavior/report.py --build-dir <build-dir> --run-tests
-```
-
-Run the script unit tests:
-
-```bash
-python3 libc/utils/behavior/tests/check_test.py
-python3 libc/utils/behavior/tests/report_test.py
-```
-
-If libc is configured with `LLVM_LIBC_INCLUDE_BEHAVIOR_MAPPING=ON`, CMake also
-provides:
+For CI, [configure libc](../../behavior/methodology.md#enforce-the-same-check-in-ci)
+with `-DLLVM_LIBC_INCLUDE_BEHAVIOR_MAPPING=ON` and run:
 
 ```bash
 ninja -C <build-dir> check-libc-behavior-mapping
-ninja -C <build-dir> report-libc-behavior-mapping
+```
+
+This target runs the validator and its Python unit tests. It returns a
+nonzero status on failure, with captured output shown by CTest. It does not
+build or run libc's test executables.
+
+## Tests for the checker
+
+These test the validator itself, including its failure conditions:
+
+```bash
+python3 libc/utils/behavior/tests/check_test.py
 ```

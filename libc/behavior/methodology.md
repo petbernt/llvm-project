@@ -1,99 +1,102 @@
-# Methodology for Behavior Mapping
+# Behavior-to-test traceability workflow
 
-This PoC is a lightweight workflow for making selected libc test intent explicit
-and machine-checkable. It is meant to answer a practical question:
+This PoC connects selected libc behaviors to the tests intended to verify them:
 
-"Can we describe a function's intended behavior, map that behavior to tests,
-and check that the mapping stays internally consistent?"
+**Standard or documented choice → behavior ID → test case**
 
-It does not claim formal qualification of LLVM itself.
+The checker validates links between behavior IDs and test annotations. Reviewers
+assess the source references, behavior descriptions, and test assertions. A
+consistent mapping alone does not establish complete standards conformance.
 
-## Goal
+## Add a behavior and map it to a test
 
-For each selected function:
-- document observable behaviors in `libc/behavior/*.yaml`
-- map those behaviors to tests with `// @verifies <BEHAVIOR_ID>`
-- validate that the mapping is internally consistent
-- run the mapped tests when a build tree is available
-- add or tighten tests where the mapping exposes gaps
+Work on one function at a time. Add or extend its entry in `libc/behavior/*.yaml`.
+Record its source, such as an ISO C clause, POSIX reference, extension, or
+LLVM-libc documented choice, along with its preconditions. Give each observable
+behavior a unique ID, such as `stdlib.strtol.B4`.
 
-## Scope
+For example, [libc/behavior/stdlib.yaml](stdlib.yaml) contains this entry under
+`functions.strtol.behaviors`. The complete function entry also records its source
+reference, signature, and preconditions:
 
-This branch is intentionally narrow:
-- libc-local
-- hosted unit-test oriented
-- best suited to simple deterministic functions such as string and memory APIs
+```yaml
+- id: "stdlib.strtol.B4"
+  source: { inherits: "function", classification: "mandated" }
+  text: "When no conversion is performed, returns 0 and stores str in str_end if str_end is not null."
+```
 
-The report output should be read as evidence about selected unit-test binaries,
-not as complete evidence for every architecture-specific implementation.
+Add `// @verifies <BEHAVIOR_ID>` immediately above the test that asserts the
+behavior. In [libc/test/src/stdlib/strtol_test.cpp](../test/src/stdlib/strtol_test.cpp),
+`ReportsNoConversion` references the same behavior ID:
 
-## Workflow
+```cpp
+// @verifies stdlib.strtol.B4
+TEST_F(LlvmLibcStrtolTest, ReportsNoConversion) {
+  char *str_end = nullptr;
+  const char *input = "word10";
 
-1. Pick one function.
-   Start small. A single function is the intended unit of work.
+  ASSERT_EQ(LIBC_NAMESPACE::strtol(input, &str_end, 10), 0L);
+  ASSERT_ERRNO_SUCCESS();
+  EXPECT_EQ(str_end - input, ptrdiff_t(0));
+}
+```
 
-2. Add behavior entries.
-   Describe externally visible behavior in `libc/behavior/*.yaml`. Include
-   source metadata that distinguishes ISO C, POSIX, extension, and LLVM-libc
-   documented-choice behavior.
+The checker connects the YAML entry and the test through their shared behavior
+ID; the YAML does not need a test-file path.
 
-3. Map behaviors to tests.
-   Add `// @verifies <BEHAVIOR_ID>` directly above the test case that is meant
-   to verify that behavior.
+Reuse a suitable test or add one where coverage is missing. Strengthen assertions
+when they do not adequately verify the behavior; do not add annotations just to
+silence the checker. A test can have multiple annotations, and a behavior can be
+mapped to multiple tests.
 
-4. Run the validator.
-   Check for unknown IDs, duplicates, and documented behaviors that still have
-   no mapped test.
+## Check traceability locally
 
-5. Run the execution-aware report.
-   Check which mapped tests correspond to built unit-test binaries and whether
-   those binaries pass.
-
-6. Add or tighten tests where needed.
-   Fix unmapped behaviors first. Then inspect whether the mapped tests assert
-   each behavior clearly enough.
-
-7. Re-run the same commands.
-   Keep the loop tight until the mapping and test set are coherent.
-
-## Commands
-
-Run the source-level validator from the repository root:
+From the repository root, run:
 
 ```bash
 python3 libc/utils/behavior/check.py
 ```
 
-If libc was configured with `LLVM_LIBC_INCLUDE_BEHAVIOR_MAPPING=ON`, the same
-check is also available as a CMake target:
+No CMake configuration or build is required. The checker prints a behavior-to-test
+matrix and returns a nonzero exit status if it finds:
+
+- A documented behavior with no mapped test.
+- An annotation referencing an unknown behavior ID.
+- A duplicate behavior ID.
+- An annotation with no following recognized test declaration.
+
+Update the descriptions, tests, or annotations as needed, then rerun the checker.
+It scans test source, so a mapped test may still be excluded by build conditions.
+
+## Enforce the same check in CI
+
+Add `-DLLVM_LIBC_INCLUDE_BEHAVIOR_MAPPING=ON` to the CI job's CMake configuration,
+then run the target below. For a new build directory, see the
+[standalone libc configuration instructions](../docs/overlay_mode.md#building-llvm-libc-as-a-standalone-runtime)
+and add the same option.
 
 ```bash
 ninja -C <build-dir> check-libc-behavior-mapping
 ```
 
-Run the execution-aware report for one function:
+Use this command's exit status to fail the CI step when traceability is broken.
+The target runs the validator and its Python unit tests; CTest shows
+captured output on failure. It requires a configured build directory, but does
+not require building the library or libc test executables first.
+Enabling the option makes the target available; the CI job must invoke it explicitly.
 
-```bash
-python3 libc/utils/behavior/report.py \
-  --build-dir <build-dir> \
-  --functions memchr \
-  --run-tests
-```
+## Metadata schema (future work)
 
-## When To Add Tests
+The metadata contents and required fields are still being defined. The current
+checker extracts behavior IDs from YAML text; it does not validate YAML syntax
+or a metadata schema. The existing files illustrate the current format.
 
-Add a new test or improve an existing one when:
-- a documented behavior has no `@verifies` mapping
-- the mapped test exists but does not assert the behavior clearly
-- the mapped test does not correspond to a built and runnable unit-test binary
+Future work is to agree the metadata model, define a schema for its structure,
+required fields, types, and allowed values, and add schema validation before
+the traceability checks in CI. This would validate the inputs to the traceability
+workflow; reviewing their meaning would still be necessary.
 
-Do not add annotations just to silence the validator. The mapping should reflect
-intentional verification.
+## Further reading
 
-## Limitations
-
-- This is not certification evidence by itself.
-- It does not cover every target-specific implementation variant.
-- It depends on the hosted libc unit-test setup used in this branch.
-- Some behaviors may still need analysis or additional tests before the mapping
-  is strong enough to be reused downstream.
+- [Overview](README.md): the concept and its scope.
+- [Tool reference](../utils/behavior/README.md): checker commands and unit tests.
