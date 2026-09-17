@@ -27,11 +27,22 @@ from pathlib import Path
 _TRACKED_BLOCK_RE = re.compile(
     r"^(?P<indent>\s*)(?:behaviors|requirements)\s*:\s*(#.*)?$"
 )
-_ID_RE = re.compile(r'^\s*(?:-\s*)?id\s*:\s*"?(?P<id>[^"#]+?)"?\s*(?:#.*)?$')
+_ID_RE = re.compile(
+    r"""^\s*(?:-\s*)?id\s*:\s*(?P<quote>["']?)(?P<id>[^"'#]+?)(?P=quote)\s*(?:#.*)?$"""
+)
 
-_VERIFIES_RE = re.compile(r"@verifies\s+(?P<id>[A-Za-z0-9_.-]+)\b")
+_VERIFIES_RE = re.compile(r"//[ \t]*@verifies[ \t]+(?P<id>[A-Za-z0-9_.-]+)\b")
+# Recognize comments and literals so examples inside strings or block comments
+# cannot introduce annotations. Raw strings can contain both quotes and newlines.
+_SOURCE_TOKEN_RE = re.compile(
+    r'R"(?P<delimiter>[^\s()\\]{0,16})\(.*?\)(?P=delimiter)"'
+    r'|"(?:\\.|[^"\\])*"'
+    r"|'(?:\\.|[^'\\\n])+'"
+    r"|/\*.*?\*/|//[^\n]*",
+    re.DOTALL,
+)
 _TEST_RE = re.compile(
-    r"\b(?P<macro>TEST|TEST_F|TEST_P|TYPED_TEST|TYPED_TEST_P)\s*"
+    r"\s*(?P<macro>TEST|TEST_F|TEST_P|TYPED_TEST|TYPED_TEST_P)\s*"
     r"\(\s*(?P<suite>[A-Za-z0-9_:]+)\s*,\s*(?P<name>[A-Za-z0-9_]+)\s*\)"
 )
 
@@ -98,7 +109,9 @@ def _discover_behavior_ids(
 
         for behavior_id in file_ids:
             if behavior_id in first_seen_in:
-                duplicate_to_files[behavior_id].update({first_seen_in[behavior_id], path})
+                duplicate_to_files[behavior_id].update(
+                    {first_seen_in[behavior_id], path}
+                )
                 continue
             first_seen_in[behavior_id] = path
 
@@ -108,7 +121,7 @@ def _discover_behavior_ids(
 def _discover_verifies(
     test_root: Path,
 ) -> tuple[dict[str, set[str]], dict[str, set[Path]], int, list[str]]:
-    """Scan tests for `@verifies` annotations and attach them to the next test macro."""
+    """Attach adjacent annotation comments to a recognized test declaration."""
     behavior_to_tests: dict[str, set[str]] = defaultdict(set)
     referenced_in_files: dict[str, set[Path]] = defaultdict(set)
     total_verifies = 0
@@ -118,26 +131,33 @@ def _discover_verifies(
         if not path.is_file():
             continue
 
-        pending: list[str] = []
-        for line in _read_text(path).splitlines():
-            for match in _VERIFIES_RE.finditer(line):
-                pending.append(match.group("id"))
-                total_verifies += 1
+        text = _read_text(path)
+        annotations: list[tuple[str, int, int]] = []
 
-            test_match = _TEST_RE.search(line)
+        def collect_annotation(match: re.Match[str]) -> str:
+            annotation = _VERIFIES_RE.match(match.group())
+            if not annotation:
+                return match.group()
+            annotations.append((annotation.group("id"), match.start(), match.end()))
+            # Blank only annotation comments, preserving offsets. Other comments
+            # and code prevent an annotation from drifting to an unrelated test.
+            return " " * len(match.group())
+
+        source = _SOURCE_TOKEN_RE.sub(collect_annotation, text)
+        total_verifies += len(annotations)
+        for behavior_id, start, end in annotations:
+            test_match = _TEST_RE.match(source, end)
             if not test_match:
+                line = text.count("\n", 0, start) + 1
+                errors.append(
+                    f"{path}:{line}: dangling @verifies annotation not immediately "
+                    "followed by a recognized TEST(...) declaration"
+                )
                 continue
 
             test_name = f"{test_match.group('suite')}.{test_match.group('name')}"
-            for behavior_id in pending:
-                behavior_to_tests[behavior_id].add(test_name)
-                referenced_in_files[behavior_id].add(path)
-            pending.clear()
-
-        if pending:
-            errors.append(
-                f"{path}: dangling @verifies annotation not followed by a TEST(...)"
-            )
+            behavior_to_tests[behavior_id].add(test_name)
+            referenced_in_files[behavior_id].add(path)
 
     return behavior_to_tests, referenced_in_files, total_verifies, errors
 
@@ -184,6 +204,10 @@ def main(argv: list[str]) -> int:
     uncovered_ids = sorted(behavior_ids - set(behavior_to_tests))
 
     ok = True
+    if not behavior_ids:
+        ok = False
+        print(f"error: no behavior IDs found in {behavior_dir}", file=sys.stderr)
+
     if errors:
         ok = False
         for error in errors:
@@ -192,7 +216,9 @@ def main(argv: list[str]) -> int:
     if duplicate_to_files:
         ok = False
         for behavior_id in sorted(duplicate_to_files):
-            files = ", ".join(str(path) for path in sorted(duplicate_to_files[behavior_id]))
+            files = ", ".join(
+                str(path) for path in sorted(duplicate_to_files[behavior_id])
+            )
             print(
                 f"error: duplicate behavior id declared: {behavior_id} ({files})",
                 file=sys.stderr,
@@ -220,7 +246,9 @@ def main(argv: list[str]) -> int:
     print(f"Behavior files: {len(yaml_files)}")
     print(f"Behavior IDs: {len(behavior_ids)}")
     print(f"@verifies annotations: {total_verifies}")
-    print(f"Mapped behaviors: {len(behavior_ids) - len(uncovered_ids)}/{len(behavior_ids)}")
+    print(
+        f"Mapped behaviors: {len(behavior_ids) - len(uncovered_ids)}/{len(behavior_ids)}"
+    )
     if duplicate_to_files:
         print(f"Duplicate behavior IDs ({len(duplicate_to_files)}):")
         for behavior_id in sorted(duplicate_to_files):

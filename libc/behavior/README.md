@@ -8,7 +8,8 @@ their tests explicit:
 Behavior descriptions in [string.yaml](string.yaml) and [stdlib.yaml](stdlib.yaml)
 record source references, preconditions, and behavior IDs. Tests reference those
 IDs through `// @verifies` annotations. The checker detects missing mappings,
-unknown references, duplicate IDs, and annotations without a following test.
+unknown references, duplicate IDs, an empty behavior inventory, and annotations
+without an immediately following recognized test declaration.
 
 The main workflow validates these source-level links locally or in CI, without
 building libc or running its tests. Reviewers assess the behavior descriptions

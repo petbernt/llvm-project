@@ -48,6 +48,7 @@ Reuse a suitable test or add one where coverage is missing. Strengthen assertion
 when they do not adequately verify the behavior; do not add annotations just to
 silence the checker. A test can have multiple annotations, and a behavior can be
 mapped to multiple tests.
+Every declared behavior needs a mapped test; tests without annotations are allowed.
 
 ## Check traceability locally
 
@@ -63,7 +64,8 @@ matrix and returns a nonzero exit status if it finds:
 - A documented behavior with no mapped test.
 - An annotation referencing an unknown behavior ID.
 - A duplicate behavior ID.
-- An annotation with no following recognized test declaration.
+- An annotation not immediately followed by a recognized test declaration.
+- No behavior IDs found.
 
 Update the descriptions, tests, or annotations as needed, then rerun the checker.
 It scans test source, so a mapped test may still be excluded by build conditions.
