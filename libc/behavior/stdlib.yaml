@@ -4,7 +4,7 @@ component: llvm-libc
 functions:
   strtol:
     source: { authority: "iso_c", standard: "C23", clause: "7.24.1.7" }
-    signature: "long(const char *str, char **str_end, int base)"
+    signature: "long strtol(const char *restrict str, char **restrict str_end, int base)"
     status: experimental
     preconditions:
       - "str points to a null-terminated byte string."

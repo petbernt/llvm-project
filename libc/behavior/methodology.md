@@ -14,6 +14,9 @@ Work on one function at a time. Add or extend its entry in `libc/behavior/*.yaml
 Record its source, such as an ISO C clause, POSIX reference, extension, or
 LLVM-libc documented choice, along with its preconditions. Give each observable
 behavior a unique ID, such as `stdlib.strtol.B4`.
+Write `signature` as a C-style declaration including the function name, with
+parameter names matching the behavior text, for example
+`size_t strnlen(const char *src, size_t count)`.
 
 For example, [libc/behavior/stdlib.yaml](stdlib.yaml) contains this entry under
 `functions.strtol.behaviors`. The complete function entry also records its source

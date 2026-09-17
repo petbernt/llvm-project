@@ -4,7 +4,7 @@ component: llvm-libc
 functions:
   memcpy:
     source: { authority: "iso_c", standard: "C23", clause: "7.26.2.1" }
-    signature: "void *(void *dest, const void *src, size_t count)"
+    signature: "void *memcpy(void *restrict dest, const void *restrict src, size_t count)"
     status: experimental
     preconditions:
       - "If count > 0, dest and src point to valid memory regions of at least count bytes."
@@ -31,7 +31,7 @@ functions:
 
   memset:
     source: { authority: "iso_c", standard: "C23", clause: "7.26.6.1" }
-    signature: "void *(void *dest, int value, size_t count)"
+    signature: "void *memset(void *dest, int value, size_t count)"
     status: experimental
     preconditions:
       - "If count > 0, dest points to a valid memory region of at least count bytes."
@@ -57,7 +57,7 @@ functions:
 
   memcmp:
     source: { authority: "iso_c", standard: "C23", clause: "7.26.4.1" }
-    signature: "int(const void *lhs, const void *rhs, size_t count)"
+    signature: "int memcmp(const void *lhs, const void *rhs, size_t count)"
     status: experimental
     preconditions:
       - "If count > 0, lhs and rhs point to valid memory regions of at least count bytes."
@@ -80,7 +80,7 @@ functions:
 
   memchr:
     source: { authority: "iso_c", standard: "C23", clause: "7.26.5.2" }
-    signature: "void *(const void *src, int value, size_t count)"
+    signature: "void *memchr(const void *src, int value, size_t count)"
     status: experimental
     preconditions:
       - "If count > 0, src points to a valid memory region of at least count bytes."
@@ -100,7 +100,7 @@ functions:
 
   strlen:
     source: { authority: "iso_c", standard: "C23", clause: "7.26.6.4" }
-    signature: "size_t(const char *src)"
+    signature: "size_t strlen(const char *src)"
     status: experimental
     preconditions:
       - "src points to a null-terminated byte string."
@@ -120,7 +120,7 @@ functions:
 
   memrchr:
     source: { authority: "gnu", standard: "GNU", reference: "memrchr" }
-    signature: "void *(const void *src, int value, size_t count)"
+    signature: "void *memrchr(const void *src, int value, size_t count)"
     status: experimental
     preconditions:
       - "If count > 0, src points to a valid memory region of at least count bytes."
@@ -143,7 +143,7 @@ functions:
 
   strcmp:
     source: { authority: "iso_c", standard: "C23", clause: "7.26.4.2" }
-    signature: "int(const char *lhs, const char *rhs)"
+    signature: "int strcmp(const char *lhs, const char *rhs)"
     status: experimental
     preconditions:
       - "lhs and rhs point to null-terminated byte strings."
@@ -163,7 +163,7 @@ functions:
 
   strncmp:
     source: { authority: "iso_c", standard: "C23", clause: "7.26.4.4" }
-    signature: "int(const char *lhs, const char *rhs, size_t count)"
+    signature: "int strncmp(const char *lhs, const char *rhs, size_t count)"
     status: experimental
     preconditions:
       - "If count > 0, lhs and rhs point to byte strings that are readable for count bytes or until an earlier null terminator."
@@ -189,7 +189,7 @@ functions:
 
   strnlen:
     source: { authority: "posix", standard: "POSIX.1-2024", reference: "strnlen" }
-    signature: "size_t(const char *src, size_t count)"
+    signature: "size_t strnlen(const char *src, size_t count)"
     status: experimental
     preconditions:
       - "src points to a byte string that is readable for count bytes or until an earlier null terminator."
@@ -206,7 +206,7 @@ functions:
 
   strchr:
     source: { authority: "iso_c", standard: "C23", clause: "7.26.5.3" }
-    signature: "char *(const char *src, int value)"
+    signature: "char *strchr(const char *src, int value)"
     status: experimental
     preconditions:
       - "src points to a null-terminated byte string."
@@ -223,7 +223,7 @@ functions:
 
   strrchr:
     source: { authority: "iso_c", standard: "C23", clause: "7.26.5.6" }
-    signature: "char *(const char *src, int value)"
+    signature: "char *strrchr(const char *src, int value)"
     status: experimental
     preconditions:
       - "src points to a null-terminated byte string."
@@ -240,7 +240,7 @@ functions:
 
   strcspn:
     source: { authority: "iso_c", standard: "C23", clause: "7.26.5.4" }
-    signature: "size_t(const char *src, const char *segment)"
+    signature: "size_t strcspn(const char *src, const char *segment)"
     status: experimental
     preconditions:
       - "src and segment point to null-terminated byte strings."
@@ -257,7 +257,7 @@ functions:
 
   strspn:
     source: { authority: "iso_c", standard: "C23", clause: "7.26.5.7" }
-    signature: "size_t(const char *src, const char *segment)"
+    signature: "size_t strspn(const char *src, const char *segment)"
     status: experimental
     preconditions:
       - "src and segment point to null-terminated byte strings."
@@ -277,7 +277,7 @@ functions:
 
   strnlen_s:
     source: { authority: "iso_c", standard: "C23", clause: "K.3.7.4.4" }
-    signature: "size_t(const char *src, size_t count)"
+    signature: "size_t strnlen_s(const char *src, size_t count)"
     status: experimental
     preconditions:
       - "If src is not null, it points to a byte string that is readable for count bytes or until an earlier null terminator."
