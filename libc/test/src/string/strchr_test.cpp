@@ -32,6 +32,7 @@ TEST_F(LlvmLibcStrchrTest, CharacterNotWithinStringShouldReturnNullptr) {
 
 TEST_F(LlvmLibcStrchrTest, TheSourceShouldNotChange) { theSourceShouldNotChange(); }
 
+// @verifies string.strchr.B1
 TEST_F(LlvmLibcStrchrTest, ShouldFindFirstOfDuplicates) {
   shouldFindFirstOfDuplicates();
 }

@@ -34,6 +34,7 @@ TEST_F(LlvmLibcStrrchrTest, CharacterNotWithinStringShouldReturnNullptr) {
   characterNotWithinStringShouldReturnNullptr();
 }
 
+// @verifies string.strrchr.B1
 TEST_F(LlvmLibcStrrchrTest, ShouldFindLastOfDuplicates) {
   shouldFindLastOfDuplicates();
 }

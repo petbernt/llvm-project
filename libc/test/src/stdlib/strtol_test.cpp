@@ -81,9 +81,10 @@ TEST_F(LlvmLibcStrtolTest, ReportsRangeErrors) {
 // @verifies stdlib.strtol.B7
 TEST_F(LlvmLibcStrtolTest, RejectsInvalidBase) {
   const char *input = "10";
-  char *str_end = nullptr;
+  char sentinel = '\0';
+  char *str_end = &sentinel;
 
   ASSERT_EQ(LIBC_NAMESPACE::strtol(input, &str_end, 1), 0L);
   ASSERT_ERRNO_EQ(EINVAL);
-  EXPECT_EQ(str_end, nullptr);
+  EXPECT_EQ(str_end, &sentinel);
 }

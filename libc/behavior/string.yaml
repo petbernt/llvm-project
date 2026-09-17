@@ -219,7 +219,7 @@ functions:
         text: "Returns a pointer to the terminating null byte when value is '\\0'."
       - id: "string.strchr.B3"
         source: { inherits: "function", classification: "mandated" }
-        text: "Returns nullptr when (char)value does not occur in src before the terminating null byte."
+        text: "Returns nullptr when no character in src, including the terminating null byte, equals (char)value."
 
   strrchr:
     source: { authority: "iso_c", standard: "C23", clause: "7.26.5.6" }
@@ -236,7 +236,7 @@ functions:
         text: "Returns a pointer to the terminating null byte when value is '\\0'."
       - id: "string.strrchr.B3"
         source: { inherits: "function", classification: "mandated" }
-        text: "Returns nullptr when (char)value does not occur in src before the terminating null byte."
+        text: "Returns nullptr when no character in src, including the terminating null byte, equals (char)value."
 
   strcspn:
     source: { authority: "iso_c", standard: "C23", clause: "7.26.5.4" }
