@@ -11,6 +11,7 @@ The validator:
 - fails if a behavior ID has no mapped test annotation
 - fails if an annotation references an unknown behavior ID
 - fails if a behavior ID is declared more than once
+- fails if no behavior IDs are found
 - prints a short summary and a Markdown matrix of behavior ID to source
   locations
 """
@@ -171,6 +172,10 @@ def main(argv: list[str]) -> int:
     uncovered_ids = sorted(behavior_ids - set(behavior_to_locations))
 
     ok = True
+    if not behavior_ids:
+        ok = False
+        print(f"error: no behavior IDs found in {behavior_dir}", file=sys.stderr)
+
     if duplicate_to_files:
         ok = False
         for behavior_id in sorted(duplicate_to_files):

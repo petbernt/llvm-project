@@ -159,6 +159,30 @@ functions:
         self.assertEqual(code, 2)
         self.assertIn("behavior directory not found", stderr)
 
+    def test_empty_inventory_fails(self):
+        with tempfile.TemporaryDirectory() as tmpdir:
+            libcxx_dir = self._make_libcxx_tree(tmpdir)
+
+            code, stdout, stderr = self._run_main(libcxx_dir)
+
+        self.assertEqual(code, 1)
+        self.assertIn("no behavior IDs found", stderr)
+        self.assertIn("Behavior files: 0", stdout)
+
+    def test_yaml_without_behavior_ids_fails(self):
+        with tempfile.TemporaryDirectory() as tmpdir:
+            libcxx_dir = self._make_libcxx_tree(tmpdir)
+            (libcxx_dir / "behavior" / "algorithm.yaml").write_text(
+                'component: libc++\nheader: "<algorithm>"\nfunctions: {}\n',
+                encoding="utf-8",
+            )
+
+            code, stdout, stderr = self._run_main(libcxx_dir)
+
+        self.assertEqual(code, 1)
+        self.assertIn("no behavior IDs found", stderr)
+        self.assertIn("Behavior files: 1", stdout)
+
 
 if __name__ == "__main__":
     unittest.main()
