@@ -3,7 +3,7 @@ header: "<algorithm>"
 
 functions:
   std::copy:
-    source: { authority: "iso_cpp", clause: "[alg.copy]" }
+    source: { authority: "iso_cpp", standard: "C++23", clause: "[alg.copy]" }
     signature: "template<class InputIterator, class OutputIterator> constexpr OutputIterator copy(InputIterator first, InputIterator last, OutputIterator result)"
     status: experimental
     preconditions:
@@ -25,7 +25,7 @@ functions:
         text: "Does not modify elements outside the output range corresponding to [first, last)."
 
   std::fill:
-    source: { authority: "iso_cpp", clause: "[alg.fill]" }
+    source: { authority: "iso_cpp", standard: "C++23", clause: "[alg.fill]" }
     signature: "template<class ForwardIterator, class T> constexpr void fill(ForwardIterator first, ForwardIterator last, const T& value)"
     status: experimental
     preconditions:
@@ -46,8 +46,12 @@ functions:
         text: "For an empty range, performs no assignments."
 
   std::equal:
-    source: { authority: "iso_cpp", clause: "[alg.equal]" }
-    signature: "template<class InputIterator1, class InputIterator2> constexpr bool equal(InputIterator1 first1, InputIterator1 last1, InputIterator2 first2)"
+    source: { authority: "iso_cpp", standard: "C++23", clause: "[alg.equal]" }
+    signature: |
+      template<class InputIterator1, class InputIterator2>
+      constexpr bool equal(InputIterator1 first1, InputIterator1 last1, InputIterator2 first2);
+      template<class InputIterator1, class InputIterator2>
+      constexpr bool equal(InputIterator1 first1, InputIterator1 last1, InputIterator2 first2, InputIterator2 last2);
     status: experimental
     preconditions:
       - "[first1, last1) is a valid range."
@@ -58,7 +62,7 @@ functions:
       - id: "algorithm.equal.B1"
         kind: "Returns"
         source: { inherits: "function", classification: "mandated" }
-        text: "Returns true when every element in [first1, last1) compares equal to the corresponding element starting at first2."
+        text: "For the three-iterator overload, returns true when every element in [first1, last1) compares equal to the corresponding element starting at first2."
       - id: "algorithm.equal.B2"
         kind: "Returns"
         source: { inherits: "function", classification: "mandated" }
@@ -70,4 +74,4 @@ functions:
       - id: "algorithm.equal.B4"
         kind: "Returns"
         source: { inherits: "function", classification: "mandated" }
-        text: "For an empty first range, returns true."
+        text: "For the three-iterator overload, returns true when [first1, last1) is empty."

@@ -3,7 +3,8 @@ header: "<array>"
 
 functions:
   std::array::size:
-    source: { authority: "iso_cpp", clause: "[array.capacity]" }
+    source: { authority: "iso_cpp", standard: "C++23", clause: "[array.members]" }
+    signature: "constexpr size_type size() const noexcept"
     status: experimental
     behaviors:
       - id: "array.capacity.size.B1"
@@ -12,7 +13,8 @@ functions:
         text: "size() returns the number of elements in the array."
 
   std::array::max_size:
-    source: { authority: "iso_cpp", clause: "[array.capacity]" }
+    source: { authority: "iso_cpp", standard: "C++23", clause: "[array.overview]" }
+    signature: "constexpr size_type max_size() const noexcept"
     status: experimental
     behaviors:
       - id: "array.capacity.max_size.B1"
@@ -21,7 +23,8 @@ functions:
         text: "max_size() returns the same value as size()."
 
   std::array::empty:
-    source: { authority: "iso_cpp", clause: "[array.capacity]" }
+    source: { authority: "iso_cpp", standard: "C++23", clause: "[array.overview]" }
+    signature: "[[nodiscard]] constexpr bool empty() const noexcept"
     status: experimental
     behaviors:
       - id: "array.capacity.empty.B1"
@@ -34,7 +37,10 @@ functions:
         text: "empty() is noexcept."
 
   std::array::data:
-    source: { authority: "iso_cpp", clause: "[array.data]" }
+    source: { authority: "iso_cpp", standard: "C++23", clause: "[array.members]" }
+    signature: |
+      constexpr T* data() noexcept;
+      constexpr const T* data() const noexcept;
     status: experimental
     behaviors:
       - id: "array.data.B1"
@@ -47,7 +53,7 @@ functions:
         text: "data() is noexcept."
 
   std::array::fill:
-    source: { authority: "iso_cpp", clause: "[array.fill]" }
+    source: { authority: "iso_cpp", standard: "C++23", clause: "[array.members]" }
     signature: "constexpr void fill(const T& value)"
     status: experimental
     preconditions:
