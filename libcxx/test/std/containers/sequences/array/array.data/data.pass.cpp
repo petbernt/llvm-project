@@ -38,7 +38,6 @@ TEST_CONSTEXPR_CXX17 bool tests() {
     // @verifies array.data.B2
     ASSERT_NOEXCEPT(c.data());
     T* p = c.data();
-    // @verifies array.data.B1
     assert(p[0] == 1);
     assert(p[1] == 2);
     assert(p[2] == 3.5);
@@ -70,6 +69,7 @@ TEST_CONSTEXPR_CXX17 bool tests() {
   }
   {
     std::array<int, 5> c = {0, 1, 2, 3, 4};
+    // @verifies array.data.B1
     assert(c.data() == &c[0]);
     assert(*c.data() == c[0]);
   }

@@ -33,7 +33,6 @@ TEST_CONSTEXPR_CXX20 bool tests() {
     typedef std::array<T, 0> C;
     C c = {};
     c.fill(5.5);
-    // @verifies array.fill.B2
     assert(c.size() == 0);
   }
   return true;
