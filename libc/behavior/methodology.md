@@ -101,6 +101,29 @@ required fields, types, and allowed values, and add schema validation before
 the traceability checks in CI. This would validate the inputs to the traceability
 workflow; reviewing their meaning would still be necessary.
 
+## Optional AI workflows (future work)
+
+Once the manual workflow and review expectations have been validated, reusable
+prompts or agent skills could assist with three steps:
+
+1. **Draft behaviors:** break down cited requirements or documented choices into
+   concise, atomic behavior entries with stable IDs, preconditions, and source
+   classifications. Write original, non-normative summaries of the source.
+2. **Find existing tests:** inspect test assertions and propose mappings to the
+   behaviors they verify. Explain which assertions support each mapping and flag
+   uncertain matches or missing tests for review.
+3. **Add tests for gaps:** when no suitable test is found, propose a separate,
+   focused test and its annotation, preserving existing upstream tests. Build
+   and run the new test through the normal libc test workflow, then rerun the
+   traceability checker.
+
+These would be optional contributor tools, developed separately from the core
+traceability mechanism; no AI tooling is currently provided or required.
+Generated descriptions, mappings, and tests remain proposals for human review
+at each step. The checker validates mapping consistency, not semantic correctness.
+Any use must follow the [LLVM AI Tool Use Policy](../../llvm/docs/AIToolPolicy.md),
+including contributor review before submitting changes for maintainer review.
+
 ## Further reading
 
 - [Overview](README.md): the concept and its scope.

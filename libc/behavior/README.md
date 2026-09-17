@@ -19,5 +19,8 @@ The metadata model and YAML schema validation remain
 [future work](methodology.md#metadata-schema-future-work). A passing traceability
 check does not establish that the complete YAML metadata is valid.
 
+Optional [AI workflows](methodology.md#optional-ai-workflows-future-work) for
+drafting behaviors, finding tests, and adding missing tests are also future work.
+
 Start with the [methodology](methodology.md) for a worked example and CI setup.
 The [tool reference](../utils/behavior/README.md) lists commands and prerequisites.
